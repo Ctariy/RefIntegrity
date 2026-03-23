@@ -1,0 +1,236 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RefIntegrity API",
+    "description": "Check if a scientific paper's references have been retracted, withdrawn, or flagged with an expression of concern. Uses OpenAlex and Crossref data.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "RefIntegrity",
+      "url": "https://refintegrity.netlify.app"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://refintegrity.netlify.app",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api/check-doi": {
+      "get": {
+        "operationId": "checkDoi",
+        "summary": "Check a paper's references for retractions",
+        "description": "Given a DOI, fetches the paper's reference list from OpenAlex and checks each reference for retraction status. Returns details about any retracted, withdrawn, or flagged references, enriched with Crossref data.",
+        "parameters": [
+          {
+            "name": "doi",
+            "in": "query",
+            "required": true,
+            "description": "DOI of the paper to check. Accepts raw DOI (10.1038/...), doi.org URL, or doi: prefix.",
+            "schema": {
+              "type": "string",
+              "example": "10.1038/s41577-020-0311-8"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckDoiResponse"
+                },
+                "examples": {
+                  "withRetraction": {
+                    "summary": "Paper with a retracted reference",
+                    "value": {
+                      "doi": "10.1038/s41577-020-0311-8",
+                      "title": "The trinity of COVID-19: immunity, inflammation and intervention",
+                      "is_retracted": false,
+                      "referenced_works_count": 138,
+                      "flagged_count": 1,
+                      "flagged_references": [
+                        {
+                          "openalex_id": "https://openalex.org/W3033822083",
+                          "doi": "https://doi.org/10.1016/s0140-6736(20)31180-6",
+                          "title": "Hydroxychloroquine or chloroquine with or without a macrolide for treatment of COVID-19: a multinational registry analysis",
+                          "publication_year": 2020,
+                          "status": "retraction",
+                          "update_date": "2020-06-05",
+                          "update_label": "Retraction",
+                          "notice_doi": "10.1016/s0140-6736(20)31324-6"
+                        }
+                      ]
+                    }
+                  },
+                  "clean": {
+                    "summary": "Paper with no retracted references",
+                    "value": {
+                      "doi": "10.1038/s41586-020-2649-2",
+                      "title": "Structure of the SARS-CoV-2 spike receptor-binding domain bound to the ACE2 receptor",
+                      "is_retracted": false,
+                      "referenced_works_count": 50,
+                      "flagged_count": 0,
+                      "flagged_references": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing DOI",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missing": {
+                    "value": { "error": "Missing doi parameter" }
+                  },
+                  "invalid": {
+                    "value": { "error": "Invalid DOI format" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "DOI not found in OpenAlex",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "This DOI was not found in OpenAlex. It may be too recent or from a source not indexed."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited by upstream API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Too many requests. Please wait 30 seconds and try again."
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "OpenAlex API error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CheckDoiResponse": {
+        "type": "object",
+        "required": ["doi", "title", "is_retracted", "referenced_works_count", "flagged_count", "flagged_references"],
+        "properties": {
+          "doi": {
+            "type": "string",
+            "description": "The cleaned DOI that was checked"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the paper"
+          },
+          "is_retracted": {
+            "type": "boolean",
+            "description": "Whether this paper itself has been retracted"
+          },
+          "referenced_works_count": {
+            "type": "integer",
+            "description": "Total number of references checked"
+          },
+          "flagged_count": {
+            "type": "integer",
+            "description": "Number of references that are retracted, withdrawn, or flagged"
+          },
+          "flagged_references": {
+            "type": "array",
+            "description": "Details of each flagged reference",
+            "items": {
+              "$ref": "#/components/schemas/FlaggedReference"
+            }
+          }
+        }
+      },
+      "FlaggedReference": {
+        "type": "object",
+        "properties": {
+          "openalex_id": {
+            "type": "string",
+            "description": "OpenAlex URI of the flagged paper"
+          },
+          "doi": {
+            "type": "string",
+            "nullable": true,
+            "description": "Full DOI URI of the flagged paper"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the flagged paper"
+          },
+          "publication_year": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Year the flagged paper was published"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["retraction", "expression-of-concern", "withdrawal", "removal", "retracted"],
+            "description": "Type of issue: retraction, expression-of-concern, withdrawal, removal, or retracted (fallback)"
+          },
+          "update_date": {
+            "type": "string",
+            "nullable": true,
+            "description": "Date of the retraction/concern notice (YYYY-MM-DD or YYYY-M-D)"
+          },
+          "update_label": {
+            "type": "string",
+            "nullable": true,
+            "description": "Human-readable label from Crossref (e.g. 'Retraction', 'Expression of Concern')"
+          },
+          "notice_doi": {
+            "type": "string",
+            "nullable": true,
+            "description": "DOI of the retraction/concern notice"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Human-readable error message"
+          }
+        }
+      }
+    }
+  }
+}

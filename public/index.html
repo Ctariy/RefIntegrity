@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RefIntegrity — Free Reference Integrity Checker</title>
+  <meta name="description" content="Free tool to check if a scientific paper's references have been retracted. Paste a DOI or upload a BibTeX file to find retractions instantly. Open-source, no login.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://refintegrity.netlify.app/">
+
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="en" href="https://refintegrity.netlify.app/">
+  <link rel="alternate" hreflang="es" href="https://refintegrity.netlify.app/es/">
+  <link rel="alternate" hreflang="fr" href="https://refintegrity.netlify.app/fr/">
+  <link rel="alternate" hreflang="de" href="https://refintegrity.netlify.app/de/">
+  <link rel="alternate" hreflang="ru" href="https://refintegrity.netlify.app/ru/">
+  <link rel="alternate" hreflang="zh" href="https://refintegrity.netlify.app/zh/">
+  <link rel="alternate" hreflang="ja" href="https://refintegrity.netlify.app/ja/">
+  <link rel="alternate" hreflang="pt" href="https://refintegrity.netlify.app/pt/">
+  <link rel="alternate" hreflang="ko" href="https://refintegrity.netlify.app/ko/">
+  <link rel="alternate" hreflang="ar" href="https://refintegrity.netlify.app/ar/">
+  <link rel="alternate" hreflang="it" href="https://refintegrity.netlify.app/it/">
+  <link rel="alternate" hreflang="x-default" href="https://refintegrity.netlify.app/">
+
+  <meta property="og:title" content="RefIntegrity — Free Reference Integrity Checker">
+  <meta property="og:description" content="Free tool to check if a scientific paper's references have been retracted. Paste a DOI or upload a BibTeX file to find retractions instantly.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://refintegrity.netlify.app/">
+  <meta property="og:image" content="https://refintegrity.netlify.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RefIntegrity — Free Reference Integrity Checker">
+  <meta name="twitter:description" content="Check if a paper's references have been retracted. Free and open-source.">
+  <meta name="twitter:image" content="https://refintegrity.netlify.app/og-image.png">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#205493">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23205493'/><text x='50' y='68' font-size='52' font-family='Georgia,serif' fill='white' text-anchor='middle' font-weight='bold'>R</text></svg>">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
+
+  <link rel="stylesheet" href="/fonts.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "RefIntegrity",
+    "url": "https://refintegrity.netlify.app/",
+    "description": "Free tool to check if a scientific paper's references have been retracted, withdrawn, or flagged with an expression of concern.",
+    "applicationCategory": "Science",
+    "operatingSystem": "Web",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": {
+      "@type": "Person",
+      "name": "Ctariy",
+      "url": "https://github.com/Ctariy"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "RefIntegrity",
+      "url": "https://refintegrity.netlify.app"
+    }
+  }
+  </script>
+
+  <script id="faq-schema" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I check if a paper's references have been retracted?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Paste a DOI into RefIntegrity. It fetches the paper's reference list and checks each one against the Retraction Watch database via OpenAlex. Results appear in seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is RefIntegrity free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, RefIntegrity is completely free and open-source. No account or login required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What databases does RefIntegrity use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RefIntegrity uses OpenAlex for scholarly metadata and retraction status (sourced from Retraction Watch), and Crossref for retraction notice details."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What types of issues does RefIntegrity detect?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RefIntegrity detects retractions, expressions of concern, withdrawals, and removals in a paper's reference list."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does RefIntegrity compare to manually checking Retraction Watch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Retraction Watch lets you look up individual papers one at a time. RefIntegrity automates this: paste a single DOI and it checks the entire reference list (often 30-150 citations) against the Retraction Watch database via OpenAlex in seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can RefIntegrity check multiple papers at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Use the bulk mode to paste multiple DOIs (one per line) or upload a BibTeX or RIS file. RefIntegrity checks all papers and shows a summary table with flagged counts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between a retraction and an expression of concern?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A retraction means the paper has been formally withdrawn by the journal or authors due to errors or misconduct. An expression of concern is a notice that the journal has serious doubts about the paper but has not yet retracted it. RefIntegrity detects both types, plus withdrawals and removals."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does RefIntegrity work with preprints or only published papers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RefIntegrity works with any paper indexed in OpenAlex, which covers over 250 million scholarly works including most published journal articles and conference papers. Preprints may not have structured reference lists available for checking."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">Ref<span>Integrity</span></a>
+      <nav aria-label="Main">
+        <button type="button" class="nav-toggle" data-panel="panel-how" data-i18n="nav.howItWorks">How it works</button>
+        <button type="button" class="nav-toggle" data-panel="panel-api" data-i18n="nav.api">API</button>
+        <a href="https://github.com/Ctariy/RefIntegrity" target="_blank" rel="noopener" data-i18n="nav.source">Source</a>
+        <div id="lang-switcher" class="lang-switcher"></div>
+      </nav>
+    </div>
+    <div id="panel-how" class="header-panel" hidden>
+      <div class="header-panel-inner">
+        <ol>
+          <li data-i18n-html="howItWorksPanel.step1"><strong>Paste a DOI</strong> &mdash; or upload a BibTeX/RIS file.</li>
+          <li data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</li>
+          <li data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</li>
+        </ol>
+        <p class="panel-note" data-i18n="howItWorksPanel.note">Unlike manual lookups, RefIntegrity checks an entire reference list in seconds.</p>
+      </div>
+    </div>
+    <div id="panel-api" class="header-panel" hidden>
+      <div class="header-panel-inner header-panel-grid">
+        <div>
+          <h3>REST API</h3>
+          <code>GET /api/check-doi?doi={doi}</code>
+          <p>Open, no auth. <a href="/openapi.json">OpenAPI spec</a> &middot; <a href="/llms.txt">llms.txt</a></p>
+        </div>
+        <div>
+          <h3>MCP Server</h3>
+          <code>https://refintegrity.netlify.app/mcp</code>
+          <p><strong>Claude Desktop:</strong> Settings &rarr; Connectors &rarr; Add URL<br>
+          <strong>Claude Code:</strong> <code class="code-inline">claude mcp add --transport http refintegrity https://refintegrity.netlify.app/mcp</code><br>
+          <strong>Cursor:</strong> Add URL in MCP settings</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-title">
+      <h1 data-i18n="hero.h1">Check if your references have been retracted</h1>
+      <p class="answer-block" data-i18n="hero.subtitle">RefIntegrity checks your paper's reference list against the Retraction Watch database. Paste a DOI to instantly find retracted, withdrawn, or flagged citations. Free, no login required.</p>
+    </div>
+
+    <!-- Primary input -->
+    <section class="search-box">
+      <div class="input-row">
+        <input type="text" id="doi-input"
+               placeholder="Paste a DOI — e.g. 10.1038/s41577-020-0311-8"
+               data-i18n-placeholder="search.placeholder"
+               aria-label="Enter DOI"
+               autocomplete="off"
+               spellcheck="false">
+        <button id="check-btn" type="button" data-goatcounter-click="check-single" data-i18n="search.checkBtn">Check</button>
+      </div>
+      <div class="input-secondary">
+        <span class="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>
+        <span class="secondary-sep">&middot;</span>
+        <button type="button" class="link-btn" id="show-bulk" data-i18n="search.checkMultiple">Check multiple DOIs</button>
+        <span class="secondary-sep">&middot;</span>
+        <label class="link-btn file-label">
+          <span data-i18n="search.uploadBibRis">Upload .bib / .ris</span>
+          <input type="file" id="file-input" accept=".bib,.ris,.txt,.enw" hidden>
+        </label>
+      </div>
+    </section>
+
+    <!-- Bulk input (hidden by default) -->
+    <section id="bulk-section" class="search-box" hidden>
+      <textarea id="bulk-input" rows="5"
+                placeholder="Paste multiple DOIs (one per line) or BibTeX/RIS content"
+                data-i18n-placeholder="search.bulkPlaceholder"
+                aria-label="Enter multiple DOIs"
+                spellcheck="false"></textarea>
+      <div class="bulk-actions">
+        <button id="bulk-check-btn" type="button" data-goatcounter-click="check-bulk" data-i18n="search.checkAll">Check all</button>
+        <span id="file-name" class="file-name" hidden></span>
+      </div>
+    </section>
+
+    <!-- Recent -->
+    <section id="history-section" class="history-section" hidden>
+      <span class="history-label" data-i18n="history.recent">Recent:</span>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <!-- Loading -->
+    <section id="loading" class="loading-section" hidden aria-live="polite">
+      <div class="loading-bar"></div>
+      <p id="loading-text" data-i18n="loading.lookingUp">Looking up paper&hellip;</p>
+    </section>
+
+    <!-- Error -->
+    <section id="error" class="notice notice-error" hidden role="alert">
+      <p id="error-message"></p>
+    </section>
+
+    <!-- Self-retraction warning -->
+    <div id="self-retracted-warning" class="notice notice-warning" hidden role="alert">
+      <span data-i18n-html="results.selfRetractedWarning"><strong>Note:</strong> This paper has itself been retracted.</span>
+    </div>
+
+    <!-- Single results -->
+    <section id="results" hidden aria-live="polite">
+      <div id="result-hero"></div>
+      <div id="paper-title" class="result-title"></div>
+
+      <div id="export-actions" class="result-actions" hidden>
+        <button id="copy-btn" type="button" class="btn-text" data-i18n="results.copyResults">Copy results</button>
+        <span class="separator">|</span>
+        <button id="csv-btn" type="button" class="btn-text" data-i18n="results.downloadCsv">Download CSV</button>
+      </div>
+
+      <div id="flagged-list"></div>
+    </section>
+
+    <!-- Bulk results -->
+    <section id="bulk-results" hidden>
+      <h2 class="section-heading" data-i18n="results.resultsHeading">Results</h2>
+      <div id="bulk-summary" class="result-summary"></div>
+      <div id="bulk-table-wrapper"></div>
+      <div class="result-actions">
+        <button id="bulk-csv-btn" type="button" class="btn-text" data-i18n="results.downloadCsv">Download CSV</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p>RefIntegrity is free, open-source software (<a href="https://github.com/Ctariy/RefIntegrity" target="_blank" rel="noopener">GitHub</a>). Data from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> and <a href="https://www.crossref.org" target="_blank" rel="noopener">Crossref</a>.</p>
+      <p class="footer-support">Useful? Support development on <a href="https://ko-fi.com/ctariy" target="_blank" rel="noopener">Ko-fi</a> or <a href="https://github.com/sponsors/Ctariy" target="_blank" rel="noopener">GitHub Sponsors</a></p>
+      <p class="footer-meta"><span class="last-updated">Updated <time datetime="2026-03-23">March 2026</time></span></p>
+    </div>
+  </footer>
+
+  <noscript><p style="text-align:center;padding:40px" data-i18n="noscript">RefIntegrity requires JavaScript to run. Please enable it in your browser.</p></noscript>
+  <script src="/i18n.js"></script>
+  <script src="/app.js"></script>
+  <script data-goatcounter="https://refintegrity.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

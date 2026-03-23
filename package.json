@@ -1,0 +1,13 @@
+{
+  "name": "retractcheck",
+  "version": "1.0.0",
+  "description": "Check if a paper's references have been retracted",
+  "scripts": {
+    "dev": "netlify dev",
+    "test": "npx playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "netlify-cli": "^17.0.0"
+  }
+}

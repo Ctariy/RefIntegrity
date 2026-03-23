@@ -1,0 +1,18 @@
+# RefIntegrity
+
+> Free tool to check if a scientific paper's references have been retracted, withdrawn, or flagged with an expression of concern.
+
+## API
+
+- [Check DOI](https://refintegrity.netlify.app/api/check-doi?doi=10.1038/s41577-020-0311-8): GET /api/check-doi?doi={doi} — returns retraction status of all references
+- [OpenAPI Spec](https://refintegrity.netlify.app/openapi.json): Full API schema (OpenAPI 3.0)
+- [MCP Server](https://refintegrity.netlify.app/mcp): Model Context Protocol endpoint for AI agents
+
+## About
+
+RefIntegrity checks a paper's reference list against the Retraction Watch database (via OpenAlex) to find retracted, withdrawn, or flagged citations. Detects retractions, expressions of concern, withdrawals, and removals. Results include retraction notice DOI and date. Free, no login required. CORS enabled.
+
+## Data Sources
+
+- [OpenAlex](https://openalex.org): Open scholarly metadata, indexes Retraction Watch database
+- [Crossref](https://crossref.org): Enriches results with retraction notice details (status type, date, notice DOI)

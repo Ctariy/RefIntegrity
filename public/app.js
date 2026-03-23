@@ -1,0 +1,432 @@
+// DOM
+const doiInput = document.getElementById("doi-input");
+const checkBtn = document.getElementById("check-btn");
+const showBulkBtn = document.getElementById("show-bulk");
+const bulkSection = document.getElementById("bulk-section");
+const bulkInput = document.getElementById("bulk-input");
+const bulkCheckBtn = document.getElementById("bulk-check-btn");
+const fileInput = document.getElementById("file-input");
+const fileNameEl = document.getElementById("file-name");
+const loadingSection = document.getElementById("loading");
+const loadingText = document.getElementById("loading-text");
+const errorSection = document.getElementById("error");
+const errorMessage = document.getElementById("error-message");
+const resultsSection = document.getElementById("results");
+const resultHero = document.getElementById("result-hero");
+const paperTitle = document.getElementById("paper-title");
+const flaggedList = document.getElementById("flagged-list");
+const selfRetractedWarning = document.getElementById("self-retracted-warning");
+const exportActions = document.getElementById("export-actions");
+const copyBtn = document.getElementById("copy-btn");
+const csvBtn = document.getElementById("csv-btn");
+const bulkResults = document.getElementById("bulk-results");
+const bulkSummary = document.getElementById("bulk-summary");
+const bulkTableWrapper = document.getElementById("bulk-table-wrapper");
+const bulkCsvBtn = document.getElementById("bulk-csv-btn");
+const historySection = document.getElementById("history-section");
+const historyList = document.getElementById("history-list");
+
+let lastResult = null;
+let bulkResultsData = [];
+let currentController = null;
+
+// --- DOI extraction ---
+
+function extractDois(text) {
+  const dois = new Set();
+  for (const m of text.matchAll(/doi\s*=\s*[{"]\s*(10\.\d{4,9}\/[^\s}"]+)/gi))
+    dois.add(m[1].replace(/[.,;]+$/, ""));
+  for (const m of text.matchAll(/^DO\s+-\s+(10\.\d{4,9}\/\S+)/gm))
+    dois.add(m[1].replace(/[.,;]+$/, ""));
+  for (const m of text.matchAll(/(?:https?:\/\/(?:dx\.)?doi\.org\/)?(10\.\d{4,9}\/[^\s,;)"'}\]>]+)/g))
+    dois.add(m[1].replace(/[.,;]+$/, ""));
+  return [...dois];
+}
+
+function cleanDoi(input) {
+  let doi = input.trim();
+  doi = doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
+  doi = doi.replace(/^doi:\s*/i, "");
+  return doi;
+}
+
+function isValidDoi(doi) {
+  return /^10\.\d{4,9}\/[^\s]+$/i.test(doi);
+}
+
+// --- Utilities ---
+
+function showSection(section) {
+  [loadingSection, errorSection, resultsSection, bulkResults].forEach(
+    (s) => (s.hidden = true)
+  );
+  selfRetractedWarning.hidden = true;
+  if (section) section.hidden = false;
+}
+
+function showError(msg) {
+  errorMessage.textContent = msg;
+  showSection(errorSection);
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+function getStatusConfig(status) {
+  const map = {
+    retraction: { labelKey: "statuses.retracted", cssClass: "badge-retracted", cardClass: "retracted" },
+    "expression-of-concern": { labelKey: "statuses.expressionOfConcern", cssClass: "badge-eoc", cardClass: "eoc" },
+    withdrawal: { labelKey: "statuses.withdrawn", cssClass: "badge-withdrawn", cardClass: "withdrawn" },
+    removal: { labelKey: "statuses.removed", cssClass: "badge-withdrawn", cardClass: "withdrawn" },
+    retracted: { labelKey: "statuses.retracted", cssClass: "badge-retracted", cardClass: "retracted" },
+  };
+  const cfg = map[status] || map.retracted;
+  return { label: i18n.t(cfg.labelKey), cssClass: cfg.cssClass, cardClass: cfg.cardClass };
+}
+
+// --- Loading steps ---
+
+function setLoadingStep(text) {
+  loadingText.textContent = text;
+}
+
+// --- History ---
+
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem("refintegrity_history") || "[]");
+  } catch { return []; }
+}
+
+function addToHistory(doi, title, count) {
+  const history = getHistory().filter((h) => h.doi !== doi);
+  history.unshift({ doi, title: title || doi, count, date: Date.now() });
+  if (history.length > 10) history.pop();
+  try { localStorage.setItem("refintegrity_history", JSON.stringify(history)); } catch { /* storage full or disabled */ }
+  renderHistory();
+}
+
+function renderHistory() {
+  const history = getHistory();
+  if (history.length === 0) { historySection.hidden = true; return; }
+  historySection.hidden = false;
+  historyList.innerHTML = history
+    .map((h) => `<button class="history-item" data-doi="${escapeHtml(h.doi)}" title="${escapeHtml(h.title)}">${escapeHtml(h.doi)}</button>`)
+    .join("");
+}
+
+// --- Single check ---
+
+async function checkSingle(doi) {
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
+
+  showSection(loadingSection);
+  setLoadingStep(i18n.t("loading.lookingUp"));
+  checkBtn.disabled = true;
+
+  try {
+    const res = await fetch(`/api/check-doi?doi=${encodeURIComponent(doi)}`, { signal: currentController.signal });
+    let data;
+    try { data = await res.json(); } catch {
+      showError(i18n.t("errors.unexpectedResponse")); return;
+    }
+    if (!res.ok) { showError(data.error || i18n.t("errors.genericError")); return; }
+
+    lastResult = data;
+    addToHistory(doi, data.title, data.flagged_count);
+    renderSingleResults(data);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    showError(i18n.t("errors.networkError"));
+  } finally {
+    checkBtn.disabled = false;
+    currentController = null;
+  }
+}
+
+function renderSingleResults(data) {
+  showSection(resultsSection);
+
+  if (data.is_retracted) selfRetractedWarning.hidden = false;
+
+  // Hero — the main takeaway
+  const total = data.referenced_works_count;
+  const flagged = data.flagged_count;
+  const clean = total - flagged;
+
+  if (flagged === 0 && total > 0) {
+    resultHero.className = "result-hero result-hero-ok";
+    resultHero.innerHTML = `<strong>${i18n.t("results.allClear", { total })}</strong>`;
+  } else if (flagged > 0) {
+    resultHero.className = "result-hero result-hero-warn";
+    const key = flagged === 1 ? "results.flaggedCountSingular" : "results.flaggedCount";
+    resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total })}</strong>`;
+  } else {
+    resultHero.className = "result-hero result-hero-neutral";
+    resultHero.innerHTML = i18n.t("results.noIndexedRefs");
+  }
+
+  // Title
+  if (data.title) {
+    paperTitle.innerHTML = `<h2>${escapeHtml(data.title)}</h2>`;
+  } else {
+    paperTitle.innerHTML = "";
+  }
+
+  // Export
+  exportActions.hidden = flagged === 0 && total === 0;
+
+  // Flagged cards
+  if (data.flagged_references && data.flagged_references.length > 0) {
+    flaggedList.innerHTML = data.flagged_references.map((ref) => {
+      const cfg = getStatusConfig(ref.status);
+      const doiUrl = ref.doi
+        ? ref.doi.startsWith("http") ? ref.doi : `https://doi.org/${ref.doi}`
+        : null;
+
+      let detailsHtml = "";
+      if (ref.update_date || ref.update_label || ref.notice_doi) {
+        const parts = [];
+        if (ref.update_date) parts.push(`<span>Date: ${escapeHtml(ref.update_date)}</span>`);
+        if (ref.update_label) parts.push(`<span>Type: ${escapeHtml(ref.update_label)}</span>`);
+        if (ref.notice_doi) {
+          const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
+          parts.push(`<span>Notice: <a href="${u}" target="_blank" rel="noopener">${escapeHtml(ref.notice_doi)}</a></span>`);
+        }
+        detailsHtml = `<div class="ref-detail">${parts.join("")}</div>`;
+      }
+
+      return `
+      <div class="ref-card ${cfg.cardClass}">
+        <span class="badge ${cfg.cssClass}">${cfg.label}</span>
+        <h3>${escapeHtml(ref.title || i18n.t("results.titleUnavailable"))}</h3>
+        <div class="ref-meta">
+          ${doiUrl ? `<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener"><code>${escapeHtml(ref.doi)}</code></a>` : ""}
+          ${ref.publication_year ? `<span>${ref.publication_year}</span>` : ""}
+        </div>
+        ${detailsHtml}
+      </div>`;
+    }).join("");
+  } else {
+    flaggedList.innerHTML = "";
+  }
+}
+
+// --- Bulk check ---
+
+async function checkBulk(dois) {
+  checkBtn.disabled = true;
+  bulkCheckBtn.disabled = true;
+  bulkResultsData = [];
+  showSection(loadingSection);
+
+  for (let i = 0; i < dois.length; i++) {
+    setLoadingStep(i18n.t("loading.checkingNofM", { current: i + 1, total: dois.length }));
+    try {
+      const res = await fetch(`/api/check-doi?doi=${encodeURIComponent(dois[i])}`);
+      let data;
+      try { data = await res.json(); } catch {
+        bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.unexpectedResponse") });
+        continue;
+      }
+      if (res.ok) {
+        bulkResultsData.push({ doi: dois[i], ...data, error: null });
+      } else {
+        bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: data.error });
+      }
+    } catch {
+      bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.networkError") });
+    }
+  }
+
+  checkBtn.disabled = false;
+  bulkCheckBtn.disabled = false;
+  renderBulkResults();
+}
+
+function renderBulkResults() {
+  showSection(bulkResults);
+  const totalRefs = bulkResultsData.reduce((s, r) => s + (r.referenced_works_count || 0), 0);
+  const totalFlagged = bulkResultsData.reduce((s, r) => s + (r.flagged_count || 0), 0);
+  const errors = bulkResultsData.filter((r) => r.error).length;
+
+  bulkSummary.innerHTML = [
+    `<span class="stat">${bulkResultsData.length} ${i18n.t("results.papers")}</span>`,
+    `<span class="stat">${totalRefs} ${i18n.t("results.references")}</span>`,
+    `<span class="stat flagged">${totalFlagged} ${i18n.t("results.flagged")}</span>`,
+    errors > 0 ? `<span class="stat">${errors} ${i18n.t("results.errorsLabel")}</span>` : "",
+  ].filter(Boolean).join('<span class="stat-sep">&middot;</span>');
+
+  let html = `<table class="bulk-table"><thead><tr><th>DOI</th><th>Title</th><th>Refs</th><th>Status</th></tr></thead><tbody>`;
+  bulkResultsData.forEach((r) => {
+    const cls = r.error ? "status-err" : r.flagged_count > 0 ? "status-warn" : "status-ok";
+    const txt = r.error || (r.flagged_count > 0 ? `${r.flagged_count} ${i18n.t("results.flagged")}` : i18n.t("results.clean"));
+    html += `<tr><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}</td></tr>`;
+  });
+  html += `</tbody></table>`;
+  bulkTableWrapper.innerHTML = html;
+}
+
+// --- Export ---
+
+function formatResultsText(data) {
+  let text = `RefIntegrity ${i18n.t("results.resultsHeading")}\nPaper: ${data.title || data.doi}\nDOI: ${data.doi}\n${i18n.t("results.references")}: ${data.referenced_works_count}, ${i18n.t("results.flagged")}: ${data.flagged_count}\n\n`;
+  if (data.flagged_references && data.flagged_references.length > 0) {
+    text += `${i18n.t("results.flagged")}:\n`;
+    data.flagged_references.forEach((ref, i) => {
+      const cfg = getStatusConfig(ref.status);
+      text += `${i + 1}. [${cfg.label}] ${ref.title || i18n.t("results.titleUnavailable")}\n`;
+      if (ref.doi) text += `   DOI: ${ref.doi}\n`;
+      if (ref.update_date) text += `   Date: ${ref.update_date}\n`;
+    });
+  } else {
+    text += `${i18n.t("results.clean")}.\n`;
+  }
+  return text;
+}
+
+function generateCsv(data) {
+  const rows = [["Title", "DOI", "Year", "Status", "Date", "Type", "Notice DOI"]];
+  (data.flagged_references || []).forEach((ref) => {
+    const cfg = getStatusConfig(ref.status);
+    rows.push([ref.title || "", ref.doi || "", ref.publication_year || "", cfg.label, ref.update_date || "", ref.update_label || "", ref.notice_doi || ""]);
+  });
+  return rows.map((r) => r.map((c) => csvSafe(c)).join(",")).join("\n");
+}
+
+function generateBulkCsv() {
+  const rows = [["DOI", "Title", "References", "Flagged", "Error"]];
+  bulkResultsData.forEach((r) => {
+    rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, r.error || ""]);
+  });
+  return rows.map((r) => r.map((c) => csvSafe(c)).join(",")).join("\n");
+}
+
+function csvSafe(value) {
+  let s = String(value).replace(/"/g, '""');
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return `"${s}"`;
+}
+
+function downloadCsv(csvContent, filename) {
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+// --- Main handler ---
+
+function handlePrimaryCheck() {
+  const raw = doiInput.value.trim();
+  if (!raw) { showError(i18n.t("errors.enterDoi")); return; }
+  const doi = cleanDoi(raw);
+  if (!isValidDoi(doi)) { showError(i18n.t("errors.invalidDoi")); return; }
+  checkSingle(doi);
+}
+
+function handleBulkCheck() {
+  const text = bulkInput.value.trim();
+  if (!text) { showError(i18n.t("errors.pasteDois")); return; }
+  const dois = extractDois(text);
+  if (dois.length === 0) { showError(i18n.t("errors.noValidDois")); return; }
+  if (dois.length === 1) { doiInput.value = dois[0]; checkSingle(dois[0]); return; }
+  checkBulk(dois);
+}
+
+// --- Events ---
+
+checkBtn.addEventListener("click", handlePrimaryCheck);
+doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrimaryCheck(); });
+
+showBulkBtn.addEventListener("click", () => {
+  bulkSection.hidden = !bulkSection.hidden;
+  if (!bulkSection.hidden) bulkInput.focus();
+});
+
+bulkCheckBtn.addEventListener("click", handleBulkCheck);
+
+// Try link
+document.querySelectorAll("[data-doi]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    doiInput.value = btn.dataset.doi;
+    handlePrimaryCheck();
+  });
+});
+
+// File upload
+fileInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 1024 * 1024) { showError(i18n.t("errors.fileTooLarge")); return; }
+  fileNameEl.textContent = file.name;
+  fileNameEl.hidden = false;
+  bulkSection.hidden = false;
+  const reader = new FileReader();
+  reader.onload = (ev) => { bulkInput.value = ev.target.result; };
+  reader.readAsText(file);
+});
+
+// Copy / CSV
+copyBtn.addEventListener("click", () => {
+  if (!lastResult) return;
+  navigator.clipboard.writeText(formatResultsText(lastResult)).then(() => showToast(i18n.t("results.copiedToClipboard")));
+});
+
+csvBtn.addEventListener("click", () => {
+  if (!lastResult) return;
+  downloadCsv(generateCsv(lastResult), `refintegrity-${lastResult.doi.replace(/\//g, "-")}.csv`);
+});
+
+bulkCsvBtn.addEventListener("click", () => {
+  if (bulkResultsData.length === 0) return;
+  downloadCsv(generateBulkCsv(), "refintegrity-bulk.csv");
+});
+
+// History
+historyList.addEventListener("click", (e) => {
+  if (e.target.classList.contains("history-item")) {
+    doiInput.value = e.target.dataset.doi;
+    handlePrimaryCheck();
+  }
+});
+
+renderHistory();
+
+// --- Header panel toggles ---
+document.querySelectorAll(".nav-toggle").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.panel;
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    const isOpen = panel.classList.contains("open");
+    // close all panels
+    document.querySelectorAll(".header-panel").forEach((p) => {
+      p.classList.remove("open");
+      p.hidden = true;
+    });
+    document.querySelectorAll(".nav-toggle").forEach((b) => b.classList.remove("active"));
+    if (!isOpen) {
+      panel.hidden = false;
+      requestAnimationFrame(() => panel.classList.add("open"));
+      btn.classList.add("active");
+    }
+  });
+});
