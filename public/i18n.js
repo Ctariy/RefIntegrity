@@ -162,8 +162,7 @@
       var up = t("footer.updated", { date: dateHtml });
       if (os !== "footer.openSource") {
         fp.innerHTML = '<p>' + os + '</p>' +
-          '<p>' + su + '</p>' +
-          '<p><span class="last-updated">' + up + '</span></p>';
+          '<p>' + su + ' &middot; <span class="last-updated">' + up + '</span></p>';
       }
     }
 
