@@ -1,6 +1,6 @@
 # RefIntegrity
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/refintegrity/deploy-status)](https://app.netlify.com/sites/refintegrity/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ce7f9eeb-5d05-4e57-80fd-895af33875c2/deploy-status)](https://app.netlify.com/sites/refintegrity/deploys)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Free, open-source tool that checks if a scientific paper's references have been retracted.**
