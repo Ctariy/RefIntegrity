@@ -46,6 +46,9 @@ function extractDois(text) {
     dois.add(m[1].replace(/[.,;]+$/, ""));
   for (const m of text.matchAll(/(?:https?:\/\/arxiv\.org\/abs\/|arXiv:)([\w.-]+\/?\d+(?:v\d+)?)/gi))
     dois.add(arxivToDoi(m[1]));
+  // PMID URLs and PMID: prefixes → store as pmid:N for later handling
+  for (const m of text.matchAll(/(?:https?:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/|PMID:\s*)(\d{1,9})/gi))
+    dois.add("pmid:" + m[1]);
   return [...dois];
 }
 
@@ -61,6 +64,11 @@ function cleanDoi(input) {
 
 function isValidDoi(doi) {
   return /^10\.\d{4,9}\/[^\s]+$/i.test(doi);
+}
+
+function parsePmid(input) {
+  var s = input.trim().replace(/^PMID:\s*/i, "").replace(/^https?:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)\/?.*$/i, "$1");
+  return /^\d{1,9}$/.test(s) ? s : null;
 }
 
 // --- Utilities ---
@@ -139,7 +147,7 @@ function renderHistory() {
 
 // --- Single check ---
 
-async function checkSingle(doi) {
+async function checkSingle(doi, pmid) {
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
@@ -148,7 +156,8 @@ async function checkSingle(doi) {
   checkBtn.disabled = true;
 
   try {
-    const res = await fetch(`/api/check-doi?doi=${encodeURIComponent(doi)}`, { signal: currentController.signal });
+    const param = pmid ? `pmid=${encodeURIComponent(pmid)}` : `doi=${encodeURIComponent(doi)}`;
+    const res = await fetch(`/api/check-doi?${param}`, { signal: currentController.signal });
     let data;
     try { data = await res.json(); } catch {
       showError(i18n.t("errors.unexpectedResponse")); return;
@@ -156,7 +165,8 @@ async function checkSingle(doi) {
     if (!res.ok) { showError(data.error || i18n.t("errors.genericError")); return; }
 
     lastResult = data;
-    addToHistory(doi, data.title, data.flagged_count);
+    const historyId = data.doi || (pmid ? "PMID:" + pmid : doi);
+    addToHistory(historyId, data.title, data.flagged_count);
     renderSingleResults(data);
   } catch (err) {
     if (err.name === "AbortError") return;
@@ -186,7 +196,13 @@ function renderSingleResults(data) {
     resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total })}</strong>`;
   } else {
     resultHero.className = "result-hero result-hero-neutral";
-    resultHero.innerHTML = i18n.t("results.noIndexedRefs");
+    // Show arXiv-specific hint when no refs found for arXiv papers
+    var msg = i18n.t("results.noIndexedRefs");
+    if (data.doi && /^10\.48550\/arXiv\./i.test(data.doi)) {
+      var hint = i18n.t("results.arxivNoRefsHint");
+      if (hint !== "results.arxivNoRefsHint") msg += " " + hint;
+    }
+    resultHero.innerHTML = msg;
   }
 
   // Title
@@ -245,15 +261,18 @@ async function checkBulk(dois) {
 
   for (let i = 0; i < dois.length; i++) {
     setLoadingStep(i18n.t("loading.checkingNofM", { current: i + 1, total: dois.length }));
+    const id = dois[i];
+    const isPmid = /^pmid:\d+$/i.test(id);
+    const param = isPmid ? `pmid=${id.replace(/^pmid:/i, "")}` : `doi=${encodeURIComponent(id)}`;
     try {
-      const res = await fetch(`/api/check-doi?doi=${encodeURIComponent(dois[i])}`);
+      const res = await fetch(`/api/check-doi?${param}`);
       let data;
       try { data = await res.json(); } catch {
-        bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.unexpectedResponse") });
+        bulkResultsData.push({ doi: id, title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.unexpectedResponse") });
         continue;
       }
       if (res.ok) {
-        bulkResultsData.push({ doi: dois[i], ...data, error: null });
+        bulkResultsData.push({ doi: data.doi || id, ...data, error: null });
       } else {
         bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: data.error });
       }
@@ -346,6 +365,9 @@ function downloadCsv(csvContent, filename) {
 function handlePrimaryCheck() {
   const raw = doiInput.value.trim();
   if (!raw) { showError(i18n.t("errors.enterDoi")); return; }
+  // Try PMID first (PMID:12345678, pubmed URL, or bare digits after cleaning)
+  const pmid = parsePmid(raw);
+  if (pmid) { checkSingle(null, pmid); return; }
   const doi = cleanDoi(raw);
   if (!isValidDoi(doi)) { showError(i18n.t("errors.invalidDoi")); return; }
   checkSingle(doi);

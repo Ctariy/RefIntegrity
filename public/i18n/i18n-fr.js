@@ -42,6 +42,7 @@ i18n.addLang("fr", {
       flaggedCount: "{flagged} r\u00e9f\u00e9rences signal\u00e9es sur {total} v\u00e9rifi\u00e9es.",
       flaggedCountSingular: "{flagged} r\u00e9f\u00e9rence signal\u00e9e sur {total} v\u00e9rifi\u00e9es.",
       noIndexedRefs: "Aucune r\u00e9f\u00e9rence index\u00e9e trouv\u00e9e pour cet article.",
+      arxivNoRefsHint: "Les preprints arXiv n'ont souvent pas de r\u00e9f\u00e9rences index\u00e9es. Essayez le DOI de la version publi\u00e9e.",
       selfRetractedWarning: "<strong>Attention\u00a0:</strong> Cet article a lui-m\u00eame \u00e9t\u00e9 r\u00e9tract\u00e9.",
       titleUnavailable: "Titre non disponible",
       resultsHeading: "R\u00e9sultats",

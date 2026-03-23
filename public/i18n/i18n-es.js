@@ -42,6 +42,7 @@ i18n.addLang("es", {
       flaggedCount: "{flagged} de {total} referencias tienen alertas.",
       flaggedCountSingular: "{flagged} de {total} referencias tiene una alerta.",
       noIndexedRefs: "No se encontraron referencias indexadas para este art\u00edculo.",
+      arxivNoRefsHint: "Los preprints de arXiv suelen carecer de datos de referencias. Prueba con el DOI de la versi\u00f3n publicada.",
       selfRetractedWarning: "<strong>Nota:</strong> Este art\u00edculo ha sido retractado.",
       titleUnavailable: "T\u00edtulo no disponible",
       resultsHeading: "Resultados",

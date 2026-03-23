@@ -42,6 +42,7 @@ i18n.addLang("de", {
       flaggedCount: "{flagged} von {total} Referenzen wurden als problematisch markiert.",
       flaggedCountSingular: "{flagged} von {total} Referenzen wurde als problematisch markiert.",
       noIndexedRefs: "F\u00fcr diesen Artikel sind keine indexierten Referenzen verf\u00fcgbar.",
+      arxivNoRefsHint: "arXiv-Preprints haben oft keine indexierten Referenzen. Verwenden Sie den DOI der publizierten Version.",
       selfRetractedWarning: "<strong>Achtung:</strong> Dieser Artikel selbst wurde zur\u00fcckgezogen.",
       titleUnavailable: "Titel nicht verf\u00fcgbar",
       resultsHeading: "Ergebnisse",

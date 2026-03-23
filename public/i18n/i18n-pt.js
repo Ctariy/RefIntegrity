@@ -42,6 +42,7 @@ i18n.addLang("pt", {
       flaggedCount: "{flagged} de {total} refer\u00eancias foram sinalizadas.",
       flaggedCountSingular: "{flagged} de {total} refer\u00eancias foi sinalizada.",
       noIndexedRefs: "Nenhuma refer\u00eancia indexada encontrada para este artigo.",
+      arxivNoRefsHint: "Preprints do arXiv geralmente n\u00e3o possuem refer\u00eancias indexadas. Tente o DOI da vers\u00e3o publicada.",
       selfRetractedWarning: "<strong>Nota:</strong> Este artigo foi retratado.",
       titleUnavailable: "T\u00edtulo indispon\u00edvel",
       resultsHeading: "Resultados",

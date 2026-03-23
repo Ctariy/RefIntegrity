@@ -86,32 +86,44 @@ export default async (req, context) => {
   }
 
   let doi;
+  let pmid;
   if (req.method === "POST") {
     let body;
     try { body = await req.json(); } catch {
       return jsonResponse({ error: "Invalid JSON body" }, 400);
     }
     doi = body.doi;
+    pmid = body.pmid;
   } else {
     const url = new URL(req.url);
     doi = url.searchParams.get("doi");
+    pmid = url.searchParams.get("pmid");
   }
 
-  if (!doi) {
-    return jsonResponse({ error: "Missing doi parameter" }, 400);
+  if (!doi && !pmid) {
+    return jsonResponse({ error: "Missing doi or pmid parameter" }, 400);
   }
 
-  doi = cleanDoi(doi);
-  if (!isValidDoi(doi)) {
-    return jsonResponse({ error: "Invalid DOI format" }, 400);
+  // PMID: validate and use directly (no DOI conversion needed)
+  if (pmid && !doi) {
+    pmid = pmid.trim().replace(/^PMID:\s*/i, "");
+    if (!/^\d{1,9}$/.test(pmid)) {
+      return jsonResponse({ error: "Invalid PMID format" }, 400);
+    }
+  } else {
+    doi = cleanDoi(doi);
+    if (!isValidDoi(doi)) {
+      return jsonResponse({ error: "Invalid DOI format" }, 400);
+    }
   }
 
   const apiKey = process.env.OPENALEX_API_KEY;
   const keyParam = apiKey ? `&api_key=${apiKey}` : "";
 
   try {
-    // Step 1: Fetch the paper by DOI
-    const workUrl = `${OPENALEX_BASE}/works/doi:${encodeURIComponent(doi)}?select=id,doi,title,is_retracted,referenced_works,referenced_works_count${keyParam}`;
+    // Step 1: Fetch the paper by DOI or PMID
+    const lookupId = pmid ? `pmid:${pmid}` : `doi:${encodeURIComponent(doi)}`;
+    const workUrl = `${OPENALEX_BASE}/works/${lookupId}?select=id,doi,title,is_retracted,referenced_works,referenced_works_count${keyParam}`;
     const workRes = await fetch(workUrl);
 
     if (workRes.status === 404) {
@@ -129,11 +141,13 @@ export default async (req, context) => {
     }
 
     const work = await workRes.json();
+    // Resolve identifiers: prefer OpenAlex DOI, fall back to input
+    const resolvedDoi = work.doi ? work.doi.replace("https://doi.org/", "") : doi;
     let refs = work.referenced_works || [];
 
-    // If OpenAlex has no references, try Crossref as fallback
-    if (refs.length === 0) {
-      const crossrefDois = await fetchCrossrefReferences(doi);
+    // If OpenAlex has no references, try Crossref as fallback (only if we have a DOI)
+    if (refs.length === 0 && resolvedDoi) {
+      const crossrefDois = await fetchCrossrefReferences(resolvedDoi);
       if (crossrefDois.length > 0) {
         const resolvedRefs = [];
         for (let i = 0; i < crossrefDois.length; i += BATCH_SIZE) {
@@ -154,7 +168,8 @@ export default async (req, context) => {
 
     if (refs.length === 0) {
       return jsonResponse({
-        doi,
+        doi: resolvedDoi,
+        pmid: pmid || undefined,
         title: work.title,
         is_retracted: work.is_retracted || false,
         referenced_works_count: 0,
@@ -202,7 +217,8 @@ export default async (req, context) => {
     );
 
     return jsonResponse({
-      doi,
+      doi: resolvedDoi,
+      pmid: pmid || undefined,
       title: work.title,
       is_retracted: work.is_retracted || false,
       referenced_works_count: refs.length,

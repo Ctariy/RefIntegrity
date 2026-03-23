@@ -57,6 +57,7 @@
       flaggedCount: "{flagged} of {total} references have been flagged.",
       flaggedCountSingular: "{flagged} of {total} references has been flagged.",
       noIndexedRefs: "This paper has no indexed references.",
+      arxivNoRefsHint: "arXiv preprints often lack indexed reference data. Try the published DOI if available.",
       selfRetractedWarning: "<strong>Note:</strong> This paper has itself been retracted.",
       titleUnavailable: "Title unavailable", resultsHeading: "Results",
       copyResults: "Copy results", downloadCsv: "Download CSV",

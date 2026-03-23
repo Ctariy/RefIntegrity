@@ -42,6 +42,7 @@ i18n.addLang("it", {
       flaggedCount: "{flagged} riferimenti segnalati su {total} verificati.",
       flaggedCountSingular: "{flagged} riferimento segnalato su {total} verificati.",
       noIndexedRefs: "Nessun riferimento indicizzato trovato per questo articolo.",
+      arxivNoRefsHint: "I preprint arXiv spesso non hanno riferimenti indicizzati. Prova il DOI della versione pubblicata.",
       selfRetractedWarning: "<strong>Attenzione:</strong> Questo articolo \u00e8 stato ritrattato.",
       titleUnavailable: "Titolo non disponibile",
       resultsHeading: "Risultati",
