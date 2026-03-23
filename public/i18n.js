@@ -31,7 +31,7 @@
     nav: { howItWorks: "How it works", api: "API", source: "Source" },
     hero: {
       h1: "Check if your references have been retracted",
-      subtitle: "RefIntegrity checks your paper's reference list against the Retraction Watch database. Paste a DOI to instantly find retracted, withdrawn, or flagged citations. Free, no login required."
+      subtitle: "RefIntegrity checks your paper's reference list against the Retraction Watch database. Enter a paper title, DOI, or PMID to instantly find retracted, withdrawn, or flagged citations. Free, no login required."
     },
     search: {
       placeholder: "Paper title, DOI, PMID, or arXiv ID",
@@ -78,7 +78,7 @@
     },
     noscript: "RefIntegrity requires JavaScript to run. Please enable it in your browser.",
     howItWorksPanel: {
-      step1: "<strong>Paste a DOI</strong> \u2014 or upload a BibTeX/RIS file.",
+      step1: "<strong>Enter a paper title or identifier</strong> \u2014 or upload a BibTeX/RIS file.",
       step2: "<strong>Automatic cross-check</strong> \u2014 all references checked against Retraction Watch via OpenAlex.",
       step3: "<strong>Instant results</strong> \u2014 flagged refs shown with status, date, and retraction notice link.",
       note: "Unlike manual lookups, RefIntegrity checks an entire reference list in seconds."

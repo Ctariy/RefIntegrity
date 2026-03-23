@@ -11,7 +11,7 @@ i18n.addLang("es", {
     nav: { howItWorks: "C\u00f3mo funciona", api: "API", source: "C\u00f3digo fuente" },
     hero: {
       h1: "Verifica si tus referencias citan art\u00edculos retractados",
-      subtitle: "Herramienta gratuita que comprueba autom\u00e1ticamente si las referencias de un art\u00edculo cient\u00edfico han sido retractadas, retiradas o tienen expresiones de preocupaci\u00f3n. Pega un DOI y obt\u00e9n resultados en segundos."
+      subtitle: "Herramienta gratuita que comprueba autom\u00e1ticamente si las referencias de un art\u00edculo cient\u00edfico han sido retractadas, retiradas o tienen expresiones de preocupaci\u00f3n. Ingresa un t\u00edtulo del art\u00edculo, DOI o PMID y obt\u00e9n resultados en segundos."
     },
     search: {
       placeholder: "T\u00edtulo del art\u00edculo, DOI, PMID o arXiv ID",
@@ -73,7 +73,7 @@ i18n.addLang("es", {
     },
     noscript: "RefIntegrity requiere JavaScript para funcionar.",
     howItWorksPanel: {
-      step1: "<strong>Pega un DOI</strong> \u2014 o sube un archivo BibTeX/RIS.",
+      step1: "<strong>Ingresa un t\u00edtulo o identificador</strong> \u2014 o sube un archivo BibTeX/RIS.",
       step2: "<strong>Verificaci\u00f3n autom\u00e1tica</strong> \u2014 todas las referencias se comprueban contra Retraction Watch v\u00eda OpenAlex.",
       step3: "<strong>Resultados instant\u00e1neos</strong> \u2014 las referencias marcadas se muestran con estado, fecha y enlace al aviso de retracci\u00f3n.",
       note: "A diferencia de la verificaci\u00f3n manual, RefIntegrity comprueba toda la lista de referencias en segundos."

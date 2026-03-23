@@ -11,7 +11,7 @@ i18n.addLang("de", {
     nav: { howItWorks: "So funktioniert's", api: "API", source: "Quellcode" },
     hero: {
       h1: "Referenzen auf Retraktionen pr\u00fcfen",
-      subtitle: "F\u00fcgen Sie einen DOI ein und pr\u00fcfen Sie in Sekunden, ob zitierte Arbeiten zur\u00fcckgezogen wurden. Kostenlos, ohne Registrierung."
+      subtitle: "Geben Sie einen Titel, DOI oder PMID ein und pr\u00fcfen Sie in Sekunden, ob zitierte Arbeiten zur\u00fcckgezogen wurden. Kostenlos, ohne Registrierung."
     },
     search: {
       placeholder: "Titel, DOI, PMID oder arXiv-ID",
@@ -72,7 +72,7 @@ i18n.addLang("de", {
     },
     noscript: "F\u00fcr RefIntegrity muss JavaScript aktiviert sein.",
     howItWorksPanel: {
-      step1: "<strong>DOI eingeben</strong> \u2014 oder BibTeX/RIS-Datei hochladen.",
+      step1: "<strong>Titel oder Kennung eingeben</strong> \u2014 oder BibTeX/RIS-Datei hochladen.",
       step2: "<strong>Automatische Pr\u00fcfung</strong> \u2014 alle Referenzen werden gegen Retraktionsdatenbanken abgeglichen.",
       step3: "<strong>Sofortige Ergebnisse</strong> \u2014 problematische Referenzen werden mit Status, Datum und Hinweis-DOI angezeigt.",
       note: "Im Gegensatz zur manuellen Pr\u00fcfung analysiert RefIntegrity das gesamte Literaturverzeichnis in Sekunden."

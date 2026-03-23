@@ -11,7 +11,7 @@ i18n.addLang("fr", {
     nav: { howItWorks: "Fonctionnement", api: "API", source: "Code source" },
     hero: {
       h1: "V\u00e9rifiez si les r\u00e9f\u00e9rences d'un article ont \u00e9t\u00e9 r\u00e9tract\u00e9es",
-      subtitle: "Collez un DOI pour v\u00e9rifier instantan\u00e9ment si les r\u00e9f\u00e9rences cit\u00e9es ont \u00e9t\u00e9 r\u00e9tract\u00e9es, retir\u00e9es ou font l'objet d'un avertissement. Gratuit, open source, sans inscription."
+      subtitle: "Saisissez un titre de l'article, DOI ou PMID pour v\u00e9rifier instantan\u00e9ment si les r\u00e9f\u00e9rences cit\u00e9es ont \u00e9t\u00e9 r\u00e9tract\u00e9es, retir\u00e9es ou font l'objet d'un avertissement. Gratuit, open source, sans inscription."
     },
     search: {
       placeholder: "Titre de l'article, DOI, PMID ou arXiv ID",
@@ -72,7 +72,7 @@ i18n.addLang("fr", {
     },
     noscript: "JavaScript est n\u00e9cessaire pour utiliser RefIntegrity.",
     howItWorksPanel: {
-      step1: "<strong>Collez un DOI</strong> \u2014 ou importez un fichier BibTeX/RIS.",
+      step1: "<strong>Saisissez un titre ou un identifiant</strong> \u2014 ou importez un fichier BibTeX/RIS.",
       step2: "<strong>V\u00e9rification automatique</strong> \u2014 toutes les r\u00e9f\u00e9rences sont v\u00e9rifi\u00e9es via OpenAlex.",
       step3: "<strong>R\u00e9sultats instantan\u00e9s</strong> \u2014 les r\u00e9f\u00e9rences signal\u00e9es avec statut, date et lien vers l'avis.",
       note: "Contrairement \u00e0 la v\u00e9rification manuelle, RefIntegrity analyse toute la liste en quelques secondes."

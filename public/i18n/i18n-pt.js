@@ -11,7 +11,7 @@ i18n.addLang("pt", {
     nav: { howItWorks: "Como funciona", api: "API", source: "C\u00f3digo-fonte" },
     hero: {
       h1: "Verifique se as refer\u00eancias do seu artigo foram retratadas",
-      subtitle: "Cole um DOI e descubra instantaneamente se alguma refer\u00eancia citada foi retratada, recebeu express\u00e3o de preocupa\u00e7\u00e3o ou foi removida. Gratuito, sem cadastro."
+      subtitle: "Insira um t\u00edtulo do artigo, DOI ou PMID e descubra instantaneamente se alguma refer\u00eancia citada foi retratada, recebeu express\u00e3o de preocupa\u00e7\u00e3o ou foi removida. Gratuito, sem cadastro."
     },
     search: {
       placeholder: "T\u00edtulo do artigo, DOI, PMID ou arXiv ID",
@@ -72,7 +72,7 @@ i18n.addLang("pt", {
     },
     noscript: "O RefIntegrity requer JavaScript para funcionar.",
     howItWorksPanel: {
-      step1: "<strong>Cole um DOI</strong> \u2014 ou envie um arquivo BibTeX/RIS.",
+      step1: "<strong>Insira um t\u00edtulo ou identificador</strong> \u2014 ou envie um arquivo BibTeX/RIS.",
       step2: "<strong>Verifica\u00e7\u00e3o autom\u00e1tica</strong> \u2014 todas as refer\u00eancias s\u00e3o verificadas via OpenAlex.",
       step3: "<strong>Resultados instant\u00e2neos</strong> \u2014 refer\u00eancias retratadas s\u00e3o exibidas com status, data e link.",
       note: "Ao contr\u00e1rio da verifica\u00e7\u00e3o manual, RefIntegrity analisa toda a lista em segundos."

@@ -11,7 +11,7 @@ i18n.addLang("it", {
     nav: { howItWorks: "Come funziona", api: "API", source: "Codice sorgente" },
     hero: {
       h1: "Verifica i riferimenti ritrattati nei tuoi articoli scientifici",
-      subtitle: "Incolla un DOI per controllare istantaneamente se i riferimenti bibliografici sono stati ritrattati, ritirati o segnalati con espressione di preoccupazione."
+      subtitle: "Inserisci un titolo dell'articolo, DOI o PMID per controllare istantaneamente se i riferimenti bibliografici sono stati ritrattati, ritirati o segnalati con espressione di preoccupazione."
     },
     search: {
       placeholder: "Titolo dell'articolo, DOI, PMID o arXiv ID",
@@ -72,7 +72,7 @@ i18n.addLang("it", {
     },
     noscript: "Per utilizzare RefIntegrity \u00e8 necessario abilitare JavaScript.",
     howItWorksPanel: {
-      step1: "<strong>Incolla un DOI</strong> \u2014 o carica un file BibTeX/RIS.",
+      step1: "<strong>Inserisci un titolo o un identificatore</strong> \u2014 o carica un file BibTeX/RIS.",
       step2: "<strong>Verifica automatica</strong> \u2014 tutti i riferimenti vengono controllati via OpenAlex.",
       step3: "<strong>Risultati istantanei</strong> \u2014 i riferimenti ritrattati vengono mostrati con stato, data e link.",
       note: "A differenza del controllo manuale, RefIntegrity verifica l'intera lista in pochi secondi."
