@@ -19,6 +19,8 @@
   --border: #dadce0;
   --bg: #fff;
   --bg-alt: #f8f9fa;
+  --surface: #f8f9fa;
+  --muted: #5f6368;
   --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --font-sans: 'Source Sans 3', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;

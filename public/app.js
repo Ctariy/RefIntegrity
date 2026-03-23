@@ -69,8 +69,11 @@ function isValidDoi(doi) {
 }
 
 function parsePmid(input) {
-  var s = input.trim().replace(/^PMID:\s*/i, "").replace(/^https?:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)\/?.*$/i, "$1");
-  return /^\d{1,9}$/.test(s) ? s : null;
+  var s = input.trim();
+  // Only treat as PMID if explicitly prefixed or PubMed URL
+  if (!/^PMID:/i.test(s) && !/pubmed\.ncbi\.nlm\.nih\.gov/i.test(s)) return null;
+  s = s.replace(/^PMID:\s*/i, "").replace(/^https?:\/\/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)\/?.*$/i, "$1");
+  return /^\d{4,9}$/.test(s) ? s : null;
 }
 
 // --- Utilities ---
@@ -266,6 +269,8 @@ function renderSingleResults(data) {
 // --- Bulk check ---
 
 async function checkBulk(dois) {
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
   checkBtn.disabled = true;
   bulkCheckBtn.disabled = true;
   bulkResultsData = [];
@@ -275,9 +280,9 @@ async function checkBulk(dois) {
     setLoadingStep(i18n.t("loading.checkingNofM", { current: i + 1, total: dois.length }));
     const id = dois[i];
     const isPmid = /^pmid:\d+$/i.test(id);
-    const param = isPmid ? `pmid=${id.replace(/^pmid:/i, "")}` : `doi=${encodeURIComponent(id)}`;
+    const param = isPmid ? `pmid=${encodeURIComponent(id.replace(/^pmid:/i, ""))}` : `doi=${encodeURIComponent(id)}`;
     try {
-      const res = await fetch(`/api/check-doi?${param}`);
+      const res = await fetch(`/api/check-doi?${param}`, { signal: currentController.signal });
       let data;
       try { data = await res.json(); } catch {
         bulkResultsData.push({ doi: id, title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.unexpectedResponse") });
@@ -288,13 +293,15 @@ async function checkBulk(dois) {
       } else {
         bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: data.error });
       }
-    } catch {
+    } catch (err) {
+      if (err.name === "AbortError") return;
       bulkResultsData.push({ doi: dois[i], title: null, flagged_count: 0, referenced_works_count: 0, error: i18n.t("errors.networkError") });
     }
   }
 
   checkBtn.disabled = false;
   bulkCheckBtn.disabled = false;
+  currentController = null;
   renderBulkResults();
 }
 
@@ -495,7 +502,8 @@ copyBtn.addEventListener("click", () => {
 
 csvBtn.addEventListener("click", () => {
   if (!lastResult) return;
-  downloadCsv(generateCsv(lastResult), `refintegrity-${lastResult.doi.replace(/\//g, "-")}.csv`);
+  var csvId = lastResult.doi ? lastResult.doi.replace(/\//g, "-") : (lastResult.pmid ? "pmid-" + lastResult.pmid : "result");
+  downloadCsv(generateCsv(lastResult), `refintegrity-${csvId}.csv`);
 });
 
 bulkCsvBtn.addEventListener("click", () => {

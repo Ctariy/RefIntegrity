@@ -25,6 +25,9 @@ export default async (req) => {
   if (!q || q.length < 3) {
     return jsonResponse({ error: "Query too short (min 3 characters)" }, 400);
   }
+  if (q.length > 500) {
+    return jsonResponse({ error: "Query too long (max 500 characters)" }, 400);
+  }
 
   const apiKey = process.env.OPENALEX_API_KEY;
   const keyParam = apiKey ? `&api_key=${apiKey}` : "";
