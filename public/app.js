@@ -141,13 +141,24 @@ function addToHistory(doi, title, count) {
   renderHistory();
 }
 
+var HISTORY_COMPACT_COUNT = 3;
+
 function renderHistory() {
   const history = getHistory();
   if (history.length === 0) { historySection.hidden = true; return; }
   historySection.hidden = false;
-  historyList.innerHTML = history
+  var expanded = historySection.classList.contains("expanded");
+  var visible = expanded ? history : history.slice(0, HISTORY_COMPACT_COUNT);
+  var html = visible
     .map((h) => `<button class="history-item" data-doi="${escapeHtml(h.doi)}" title="${escapeHtml(h.title)}">${escapeHtml(h.doi)}</button>`)
     .join("");
+  if (!expanded && history.length > HISTORY_COMPACT_COUNT) {
+    var more = history.length - HISTORY_COMPACT_COUNT;
+    html += `<button class="history-toggle" id="history-toggle-btn">+${more}</button>`;
+  } else if (expanded && history.length > HISTORY_COMPACT_COUNT) {
+    html += `<button class="history-toggle" id="history-toggle-btn">&minus;</button>`;
+  }
+  historyList.innerHTML = html;
 }
 
 // --- Single check ---
@@ -516,6 +527,10 @@ historyList.addEventListener("click", (e) => {
   if (e.target.classList.contains("history-item")) {
     doiInput.value = e.target.dataset.doi;
     handlePrimaryCheck();
+  }
+  if (e.target.classList.contains("history-toggle")) {
+    historySection.classList.toggle("expanded");
+    renderHistory();
   }
 });
 
