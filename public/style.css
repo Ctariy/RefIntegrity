@@ -447,17 +447,14 @@ footer { border-top: 1px solid var(--border); margin-top: 48px; }
   max-width: var(--content-width); margin: 0 auto; padding: 20px;
   font-size: 0.75rem; color: var(--text-secondary); line-height: 1.6;
 }
+.footer-inner p { line-height: 1.8; }
 .footer-inner a { color: var(--text-secondary); text-decoration: underline; }
 .footer-inner a:hover { color: var(--navy); }
-.footer-support { margin-top: 8px; font-size: 0.8125rem; }
-.footer-support a { color: var(--navy) !important; font-weight: 500; }
-.footer-meta { margin-top: 4px; }
+.footer-sep { color: var(--border); margin: 0 2px; }
 .last-updated { font-style: italic; }
 
 /* AI agent optimization */
 .answer-block { font-size: 0.9rem; color: var(--text-secondary); max-width: 520px; }
-
-.footer-meta { margin-top: 6px; }
 
 /* Toast */
 .toast {

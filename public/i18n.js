@@ -161,9 +161,9 @@
       var dateHtml = '<time datetime="2026-03-23">' + (mo !== "footer.monthYear" ? mo : "March 2026") + '</time>';
       var up = t("footer.updated", { date: dateHtml });
       if (os !== "footer.openSource") {
-        fp.innerHTML = '<p>' + os + '</p>' +
-          '<p class="footer-support">' + su + '</p>' +
-          '<p class="footer-meta"><span class="last-updated">' + up + '</span></p>';
+        fp.innerHTML = '<p>' + os +
+          ' <span class="footer-sep">&middot;</span> ' + su +
+          ' <span class="footer-sep">&middot;</span> <span class="last-updated">' + up + '</span></p>';
       }
     }
 
