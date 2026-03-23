@@ -14,7 +14,7 @@ i18n.addLang("es", {
       subtitle: "Herramienta gratuita que comprueba autom\u00e1ticamente si las referencias de un art\u00edculo cient\u00edfico han sido retractadas, retiradas o tienen expresiones de preocupaci\u00f3n. Pega un DOI y obt\u00e9n resultados en segundos."
     },
     search: {
-      placeholder: "Ingresa un DOI \u2014 por ejemplo, 10.1038/s41577-020-0311-8",
+      placeholder: "Ingresa un DOI o arXiv ID \u2014 por ejemplo, 10.1038/s41577-020-0311-8",
       checkBtn: "Verificar",
       tryLabel: "Prueba:",
       checkMultiple: "Verificar m\u00faltiples art\u00edculos",

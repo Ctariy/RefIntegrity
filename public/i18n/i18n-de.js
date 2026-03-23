@@ -14,7 +14,7 @@ i18n.addLang("de", {
       subtitle: "F\u00fcgen Sie einen DOI ein und pr\u00fcfen Sie in Sekunden, ob zitierte Arbeiten zur\u00fcckgezogen wurden. Kostenlos, ohne Registrierung."
     },
     search: {
-      placeholder: "DOI eingeben \u2014 z.\u00a0B. 10.1038/s41577-020-0311-8",
+      placeholder: "DOI oder arXiv-ID eingeben \u2014 z.\u00a0B. 10.1038/s41577-020-0311-8",
       checkBtn: "Pr\u00fcfen",
       tryLabel: "Beispiel:",
       checkMultiple: "Mehrere Artikel pr\u00fcfen",

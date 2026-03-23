@@ -14,7 +14,7 @@ i18n.addLang("pt", {
       subtitle: "Cole um DOI e descubra instantaneamente se alguma refer\u00eancia citada foi retratada, recebeu express\u00e3o de preocupa\u00e7\u00e3o ou foi removida. Gratuito, sem cadastro."
     },
     search: {
-      placeholder: "Cole um DOI \u2014 ex: 10.1038/s41577-020-0311-8",
+      placeholder: "Cole um DOI ou arXiv ID \u2014 ex: 10.1038/s41577-020-0311-8",
       checkBtn: "Verificar",
       tryLabel: "Experimente:",
       checkMultiple: "Verificar v\u00e1rios artigos",

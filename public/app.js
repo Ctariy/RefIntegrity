@@ -32,6 +32,10 @@ let currentController = null;
 
 // --- DOI extraction ---
 
+function arxivToDoi(id) {
+  return "10.48550/arXiv." + id.replace(/v\d+$/i, "");
+}
+
 function extractDois(text) {
   const dois = new Set();
   for (const m of text.matchAll(/doi\s*=\s*[{"]\s*(10\.\d{4,9}\/[^\s}"]+)/gi))
@@ -40,11 +44,16 @@ function extractDois(text) {
     dois.add(m[1].replace(/[.,;]+$/, ""));
   for (const m of text.matchAll(/(?:https?:\/\/(?:dx\.)?doi\.org\/)?(10\.\d{4,9}\/[^\s,;)"'}\]>]+)/g))
     dois.add(m[1].replace(/[.,;]+$/, ""));
+  for (const m of text.matchAll(/(?:https?:\/\/arxiv\.org\/abs\/|arXiv:)([\w.-]+\/?\d+(?:v\d+)?)/gi))
+    dois.add(arxivToDoi(m[1]));
   return [...dois];
 }
 
 function cleanDoi(input) {
   let doi = input.trim();
+  // arXiv URL or prefix → convert to DOI
+  var arxiv = doi.match(/^(?:https?:\/\/arxiv\.org\/abs\/|arXiv:)([\w.-]+\/?\d+(?:v\d+)?)\s*$/i);
+  if (arxiv) return arxivToDoi(arxiv[1]);
   doi = doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
   doi = doi.replace(/^doi:\s*/i, "");
   return doi;

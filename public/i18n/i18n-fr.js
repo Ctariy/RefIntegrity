@@ -14,7 +14,7 @@ i18n.addLang("fr", {
       subtitle: "Collez un DOI pour v\u00e9rifier instantan\u00e9ment si les r\u00e9f\u00e9rences cit\u00e9es ont \u00e9t\u00e9 r\u00e9tract\u00e9es, retir\u00e9es ou font l'objet d'un avertissement. Gratuit, open source, sans inscription."
     },
     search: {
-      placeholder: "Collez un DOI \u2014 ex. 10.1038/s41577-020-0311-8",
+      placeholder: "Collez un DOI ou arXiv ID \u2014 ex. 10.1038/s41577-020-0311-8",
       checkBtn: "V\u00e9rifier",
       tryLabel: "Essayez\u00a0:",
       checkMultiple: "V\u00e9rifier plusieurs articles",

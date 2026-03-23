@@ -14,7 +14,7 @@ i18n.addLang("it", {
       subtitle: "Incolla un DOI per controllare istantaneamente se i riferimenti bibliografici sono stati ritrattati, ritirati o segnalati con espressione di preoccupazione."
     },
     search: {
-      placeholder: "Inserisci un DOI \u2014 es. 10.1038/s41577-020-0311-8",
+      placeholder: "Inserisci un DOI o arXiv ID \u2014 es. 10.1038/s41577-020-0311-8",
       checkBtn: "Verifica",
       tryLabel: "Prova:",
       checkMultiple: "Verifica pi\u00f9 articoli",

@@ -34,7 +34,7 @@
       subtitle: "RefIntegrity checks your paper's reference list against the Retraction Watch database. Paste a DOI to instantly find retracted, withdrawn, or flagged citations. Free, no login required."
     },
     search: {
-      placeholder: "Paste a DOI \u2014 e.g. 10.1038/s41577-020-0311-8",
+      placeholder: "Paste a DOI or arXiv ID \u2014 e.g. 10.1038/s41577-020-0311-8",
       checkBtn: "Check", tryLabel: "Try:", checkMultiple: "Check multiple DOIs",
       uploadBibRis: "Upload .bib / .ris",
       bulkPlaceholder: "Paste multiple DOIs (one per line) or BibTeX/RIS content",
