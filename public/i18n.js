@@ -72,7 +72,7 @@
     statuses: { retracted: "Retracted", expressionOfConcern: "Expression of Concern", withdrawn: "Withdrawn", removed: "Removed" },
     footer: {
       openSource: "RefIntegrity is free, open-source software ({github}). Data from {openalex} and {crossref}.",
-      support: "Useful? Support development on {kofi} or {sponsors}",
+      support: "Support on {kofi} or {sponsors}",
       updated: "Updated {date}",
       monthYear: "March 2026"
     },
