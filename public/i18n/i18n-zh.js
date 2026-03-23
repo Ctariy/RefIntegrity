@@ -19,7 +19,7 @@ i18n.addLang("zh", {
       tryLabel: "\u8bd5\u8bd5\uff1a",
       checkMultiple: "\u6279\u91cf\u68c0\u67e5\u591a\u7bc7\u8bba\u6587",
       uploadBibRis: "\u4e0a\u4f20 BibTeX/RIS \u6587\u4ef6",
-      bulkPlaceholder: "\u6bcf\u884c\u8f93\u5165\u4e00\u4e2aDOI",
+      bulkPlaceholder: "\u6bcf\u884c\u8f93\u5165\u4e00\u4e2a DOI\u3001PMID \u6216 arXiv ID\uff0c\u6216\u7c98\u8d34 BibTeX/RIS \u5185\u5bb9",
       checkAll: "\u5168\u90e8\u68c0\u67e5",
       selectPaper: "\u8bf7\u9009\u62e9\u8981\u68c0\u67e5\u7684\u8bba\u6587\uff1a", citedBy: "\u88ab\u5f15\u7528 {count} \u6b21"
     },

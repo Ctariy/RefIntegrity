@@ -19,7 +19,7 @@ i18n.addLang("es", {
       tryLabel: "Prueba:",
       checkMultiple: "Verificar m\u00faltiples art\u00edculos",
       uploadBibRis: "Subir archivo BibTeX/RIS",
-      bulkPlaceholder: "Pega varios DOIs, uno por l\u00ednea",
+      bulkPlaceholder: "DOIs, PMIDs o arXiv IDs (uno por l\u00ednea) o contenido BibTeX/RIS",
       checkAll: "Verificar todos",
       selectPaper: "Selecciona el art\u00edculo que deseas verificar:",
       citedBy: "citado por {count}"

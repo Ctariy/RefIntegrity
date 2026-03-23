@@ -35,9 +35,9 @@
     },
     search: {
       placeholder: "Paper title, DOI, PMID, or arXiv ID",
-      checkBtn: "Check", tryLabel: "Try:", checkMultiple: "Check multiple DOIs",
+      checkBtn: "Check", tryLabel: "Try:", checkMultiple: "Check multiple papers",
       uploadBibRis: "Upload .bib / .ris",
-      bulkPlaceholder: "Paste multiple DOIs (one per line) or BibTeX/RIS content",
+      bulkPlaceholder: "Paste DOIs, PMIDs, or arXiv IDs (one per line) or BibTeX/RIS content",
       checkAll: "Check all",
       selectPaper: "Select the paper you want to check:",
       citedBy: "cited by {count}"

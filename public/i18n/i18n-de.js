@@ -19,7 +19,7 @@ i18n.addLang("de", {
       tryLabel: "Beispiel:",
       checkMultiple: "Mehrere Artikel pr\u00fcfen",
       uploadBibRis: "BibTeX/RIS hochladen",
-      bulkPlaceholder: "Einen DOI pro Zeile eingeben",
+      bulkPlaceholder: "DOIs, PMIDs oder arXiv-IDs (eins pro Zeile) oder BibTeX/RIS-Inhalt",
       checkAll: "Alle pr\u00fcfen",
       selectPaper: "W\u00e4hlen Sie den Artikel aus:", citedBy: "zitiert von {count}"
     },

@@ -19,7 +19,7 @@ i18n.addLang("fr", {
       tryLabel: "Essayez\u00a0:",
       checkMultiple: "V\u00e9rifier plusieurs articles",
       uploadBibRis: "Importer BibTeX/RIS",
-      bulkPlaceholder: "Collez plusieurs DOI (un par ligne)",
+      bulkPlaceholder: "DOIs, PMIDs ou arXiv IDs (un par ligne) ou contenu BibTeX/RIS",
       checkAll: "Tout v\u00e9rifier",
       selectPaper: "S\u00e9lectionnez l'article \u00e0 v\u00e9rifier\u00a0:", citedBy: "cit\u00e9 par {count}"
     },

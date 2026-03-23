@@ -19,7 +19,7 @@ i18n.addLang("ko", {
       tryLabel: "\uc608\uc2dc:",
       checkMultiple: "\uc5ec\ub7ec \ub17c\ubb38 \ud55c\uaebc\ubc88\uc5d0 \ud655\uc778",
       uploadBibRis: "BibTeX/RIS \ud30c\uc77c \uc5c5\ub85c\ub4dc",
-      bulkPlaceholder: "DOI\ub97c \ud55c \uc904\uc5d0 \ud558\ub098\uc529 \uc785\ub825\ud558\uc138\uc694",
+      bulkPlaceholder: "DOI, PMID \ub610\ub294 arXiv ID\ub97c \ud55c \uc904\uc5d0 \ud558\ub098\uc529, \ub610\ub294 BibTeX/RIS \ub0b4\uc6a9",
       checkAll: "\uc804\uccb4 \ud655\uc778",
       selectPaper: "\ud655\uc778\ud560 \ub17c\ubb38\uc744 \uc120\ud0dd\ud558\uc138\uc694:", citedBy: "\uc778\uc6a9 {count}\ud68c"
     },

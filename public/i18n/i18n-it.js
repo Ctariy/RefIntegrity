@@ -19,7 +19,7 @@ i18n.addLang("it", {
       tryLabel: "Prova:",
       checkMultiple: "Verifica pi\u00f9 articoli",
       uploadBibRis: "Carica BibTeX/RIS",
-      bulkPlaceholder: "Incolla pi\u00f9 DOI, uno per riga",
+      bulkPlaceholder: "DOI, PMID o arXiv ID (uno per riga) o contenuto BibTeX/RIS",
       checkAll: "Verifica tutti",
       selectPaper: "Seleziona l'articolo da verificare:", citedBy: "citato da {count}"
     },
