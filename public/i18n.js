@@ -34,14 +34,16 @@
       subtitle: "RefIntegrity checks your paper's reference list against the Retraction Watch database. Paste a DOI to instantly find retracted, withdrawn, or flagged citations. Free, no login required."
     },
     search: {
-      placeholder: "Paste a DOI or arXiv ID \u2014 e.g. 10.1038/s41577-020-0311-8",
+      placeholder: "Paper title, DOI, PMID, or arXiv ID",
       checkBtn: "Check", tryLabel: "Try:", checkMultiple: "Check multiple DOIs",
       uploadBibRis: "Upload .bib / .ris",
       bulkPlaceholder: "Paste multiple DOIs (one per line) or BibTeX/RIS content",
-      checkAll: "Check all"
+      checkAll: "Check all",
+      selectPaper: "Select the paper you want to check:",
+      citedBy: "cited by {count}"
     },
     history: { recent: "Recent:" },
-    loading: { lookingUp: "Looking up paper\u2026", checkingNofM: "Checking {current} of {total}\u2026" },
+    loading: { lookingUp: "Looking up paper\u2026", checkingNofM: "Checking {current} of {total}\u2026", searching: "Searching\u2026" },
     errors: {
       enterDoi: "Please enter a DOI.",
       invalidDoi: "Invalid DOI format. Example: 10.1038/s41577-020-0311-8",
@@ -50,7 +52,8 @@
       fileTooLarge: "File too large (max 1 MB).",
       unexpectedResponse: "Server returned an unexpected response. Try again.",
       genericError: "An error occurred.",
-      networkError: "Network error. Check your connection and try again."
+      networkError: "Network error. Check your connection and try again.",
+      noSearchResults: "No papers found. Try a more specific title or paste a DOI."
     },
     results: {
       allClear: "All clear \u2014 {total} references checked, none retracted.",

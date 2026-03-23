@@ -191,7 +191,7 @@
     <section class="search-box">
       <div class="input-row">
         <input type="text" id="doi-input"
-               placeholder="Paste a DOI or arXiv ID — e.g. 10.1038/s41577-020-0311-8"
+               placeholder="Paper title, DOI, PMID, or arXiv ID"
                data-i18n-placeholder="search.placeholder"
                aria-label="Enter DOI"
                autocomplete="off"
@@ -238,6 +238,12 @@
     <!-- Error -->
     <section id="error" class="notice notice-error" hidden role="alert">
       <p id="error-message"></p>
+    </section>
+
+    <!-- Search results (title search disambiguation) -->
+    <section id="search-results" hidden aria-live="polite">
+      <p id="search-heading" class="search-heading" data-i18n="search.selectPaper">Select the paper you want to check:</p>
+      <div id="search-list"></div>
     </section>
 
     <!-- Self-retraction warning -->

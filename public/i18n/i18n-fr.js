@@ -14,17 +14,18 @@ i18n.addLang("fr", {
       subtitle: "Collez un DOI pour v\u00e9rifier instantan\u00e9ment si les r\u00e9f\u00e9rences cit\u00e9es ont \u00e9t\u00e9 r\u00e9tract\u00e9es, retir\u00e9es ou font l'objet d'un avertissement. Gratuit, open source, sans inscription."
     },
     search: {
-      placeholder: "Collez un DOI ou arXiv ID \u2014 ex. 10.1038/s41577-020-0311-8",
+      placeholder: "Titre de l'article, DOI, PMID ou arXiv ID",
       checkBtn: "V\u00e9rifier",
       tryLabel: "Essayez\u00a0:",
       checkMultiple: "V\u00e9rifier plusieurs articles",
       uploadBibRis: "Importer BibTeX/RIS",
       bulkPlaceholder: "Collez plusieurs DOI (un par ligne)",
-      checkAll: "Tout v\u00e9rifier"
+      checkAll: "Tout v\u00e9rifier",
+      selectPaper: "S\u00e9lectionnez l'article \u00e0 v\u00e9rifier\u00a0:", citedBy: "cit\u00e9 par {count}"
     },
     history: { recent: "R\u00e9centes\u00a0:" },
     loading: {
-      lookingUp: "Recherche en cours\u2026",
+      lookingUp: "Recherche en cours\u2026", searching: "Recherche\u2026",
       checkingNofM: "V\u00e9rification {current} sur {total}\u2026"
     },
     errors: {
@@ -35,7 +36,8 @@ i18n.addLang("fr", {
       fileTooLarge: "Fichier trop volumineux (max. 1 Mo).",
       unexpectedResponse: "R\u00e9ponse inattendue du serveur. Veuillez r\u00e9essayer.",
       genericError: "Une erreur est survenue.",
-      networkError: "Erreur r\u00e9seau. V\u00e9rifiez votre connexion et r\u00e9essayez."
+      networkError: "Erreur r\u00e9seau. V\u00e9rifiez votre connexion et r\u00e9essayez.",
+      noSearchResults: "Aucun article trouv\u00e9. Essayez un titre plus pr\u00e9cis ou collez un DOI."
     },
     results: {
       allClear: "Aucune r\u00e9tractation d\u00e9tect\u00e9e parmi les {total} r\u00e9f\u00e9rences v\u00e9rifi\u00e9es.",

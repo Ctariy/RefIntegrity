@@ -360,6 +360,22 @@ main {
 }
 .btn-text:hover { text-decoration: underline; }
 .separator { color: var(--border); font-size: 0.75rem; }
+/* Search results (title disambiguation) */
+.search-heading { font-size: 0.9375rem; color: var(--muted); margin-bottom: 12px; }
+.search-item {
+  display: block; width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer;
+  font-family: var(--font-sans); transition: border-color 0.15s, box-shadow 0.15s;
+}
+.search-item:hover { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.search-title { display: block; font-size: 0.9375rem; font-weight: 500; color: var(--navy); line-height: 1.4; }
+.search-meta { display: block; font-size: 0.8125rem; color: var(--muted); margin-top: 4px; }
+.badge-retracted {
+  display: inline-block; font-size: 0.6875rem; font-weight: 600; padding: 1px 6px;
+  border-radius: 3px; background: var(--red-bg, #fde8e8); color: var(--red, #b91c1c);
+  vertical-align: middle; margin-left: 6px;
+}
+
 .result-disclaimer {
   font-size: 0.75rem; color: var(--muted); margin-top: 16px; padding-top: 12px;
   border-top: 1px solid var(--border); line-height: 1.5;

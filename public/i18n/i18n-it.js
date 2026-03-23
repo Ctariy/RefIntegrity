@@ -14,17 +14,18 @@ i18n.addLang("it", {
       subtitle: "Incolla un DOI per controllare istantaneamente se i riferimenti bibliografici sono stati ritrattati, ritirati o segnalati con espressione di preoccupazione."
     },
     search: {
-      placeholder: "Inserisci un DOI o arXiv ID \u2014 es. 10.1038/s41577-020-0311-8",
+      placeholder: "Titolo dell'articolo, DOI, PMID o arXiv ID",
       checkBtn: "Verifica",
       tryLabel: "Prova:",
       checkMultiple: "Verifica pi\u00f9 articoli",
       uploadBibRis: "Carica BibTeX/RIS",
       bulkPlaceholder: "Incolla pi\u00f9 DOI, uno per riga",
-      checkAll: "Verifica tutti"
+      checkAll: "Verifica tutti",
+      selectPaper: "Seleziona l'articolo da verificare:", citedBy: "citato da {count}"
     },
     history: { recent: "Recenti:" },
     loading: {
-      lookingUp: "Ricerca in corso\u2026",
+      lookingUp: "Ricerca in corso\u2026", searching: "Ricerca in corso\u2026",
       checkingNofM: "Verifica {current} di {total}\u2026"
     },
     errors: {
@@ -35,7 +36,8 @@ i18n.addLang("it", {
       fileTooLarge: "Il file \u00e8 troppo grande (max. 1 MB).",
       unexpectedResponse: "Risposta imprevista dal server.",
       genericError: "Si \u00e8 verificato un errore.",
-      networkError: "Errore di connessione. Verifica la tua connessione a Internet."
+      networkError: "Errore di connessione. Verifica la tua connessione a Internet.",
+      noSearchResults: "Nessun articolo trovato. Prova un titolo pi\u00f9 specifico o inserisci un DOI."
     },
     results: {
       allClear: "Nessun problema rilevato \u2014 tutti i {total} riferimenti verificati risultano integri.",

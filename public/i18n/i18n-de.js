@@ -14,17 +14,18 @@ i18n.addLang("de", {
       subtitle: "F\u00fcgen Sie einen DOI ein und pr\u00fcfen Sie in Sekunden, ob zitierte Arbeiten zur\u00fcckgezogen wurden. Kostenlos, ohne Registrierung."
     },
     search: {
-      placeholder: "DOI oder arXiv-ID eingeben \u2014 z.\u00a0B. 10.1038/s41577-020-0311-8",
+      placeholder: "Titel, DOI, PMID oder arXiv-ID",
       checkBtn: "Pr\u00fcfen",
       tryLabel: "Beispiel:",
       checkMultiple: "Mehrere Artikel pr\u00fcfen",
       uploadBibRis: "BibTeX/RIS hochladen",
       bulkPlaceholder: "Einen DOI pro Zeile eingeben",
-      checkAll: "Alle pr\u00fcfen"
+      checkAll: "Alle pr\u00fcfen",
+      selectPaper: "W\u00e4hlen Sie den Artikel aus:", citedBy: "zitiert von {count}"
     },
     history: { recent: "Letzte:" },
     loading: {
-      lookingUp: "Artikel wird abgerufen\u2026",
+      lookingUp: "Artikel wird abgerufen\u2026", searching: "Suche\u2026",
       checkingNofM: "Pr\u00fcfe {current} von {total}\u2026"
     },
     errors: {
@@ -35,7 +36,8 @@ i18n.addLang("de", {
       fileTooLarge: "Datei zu gro\u00df (max. 1\u00a0MB).",
       unexpectedResponse: "Unerwartete Antwort vom Server. Bitte versuchen Sie es erneut.",
       genericError: "Ein Fehler ist aufgetreten.",
-      networkError: "Netzwerkfehler. Bitte \u00fcberpr\u00fcfen Sie Ihre Internetverbindung."
+      networkError: "Netzwerkfehler. Bitte \u00fcberpr\u00fcfen Sie Ihre Internetverbindung.",
+      noSearchResults: "Keine Artikel gefunden. Versuchen Sie einen genaueren Titel oder geben Sie einen DOI ein."
     },
     results: {
       allClear: "Alles in Ordnung \u2014 keine der {total} gepr\u00fcften Referenzen wurde zur\u00fcckgezogen.",

@@ -14,17 +14,18 @@ i18n.addLang("pt", {
       subtitle: "Cole um DOI e descubra instantaneamente se alguma refer\u00eancia citada foi retratada, recebeu express\u00e3o de preocupa\u00e7\u00e3o ou foi removida. Gratuito, sem cadastro."
     },
     search: {
-      placeholder: "Cole um DOI ou arXiv ID \u2014 ex: 10.1038/s41577-020-0311-8",
+      placeholder: "T\u00edtulo do artigo, DOI, PMID ou arXiv ID",
       checkBtn: "Verificar",
       tryLabel: "Experimente:",
       checkMultiple: "Verificar v\u00e1rios artigos",
       uploadBibRis: "Enviar BibTeX/RIS",
       bulkPlaceholder: "Cole um DOI por linha",
-      checkAll: "Verificar todos"
+      checkAll: "Verificar todos",
+      selectPaper: "Selecione o artigo que deseja verificar:", citedBy: "citado por {count}"
     },
     history: { recent: "Recentes:" },
     loading: {
-      lookingUp: "Buscando artigo\u2026",
+      lookingUp: "Buscando artigo\u2026", searching: "Pesquisando\u2026",
       checkingNofM: "Verificando {current} de {total}\u2026"
     },
     errors: {
@@ -35,7 +36,8 @@ i18n.addLang("pt", {
       fileTooLarge: "Arquivo muito grande (m\u00e1x. 1 MB).",
       unexpectedResponse: "Resposta inesperada do servidor. Tente novamente.",
       genericError: "Ocorreu um erro.",
-      networkError: "Erro de conex\u00e3o. Verifique sua internet e tente novamente."
+      networkError: "Erro de conex\u00e3o. Verifique sua internet e tente novamente.",
+      noSearchResults: "Nenhum artigo encontrado. Tente um t\u00edtulo mais espec\u00edfico ou cole um DOI."
     },
     results: {
       allClear: "Tudo certo \u2014 nenhuma das {total} refer\u00eancias foi retratada.",

@@ -25,6 +25,8 @@ const bulkTableWrapper = document.getElementById("bulk-table-wrapper");
 const bulkCsvBtn = document.getElementById("bulk-csv-btn");
 const historySection = document.getElementById("history-section");
 const historyList = document.getElementById("history-list");
+const searchResultsSection = document.getElementById("search-results");
+const searchList = document.getElementById("search-list");
 
 let lastResult = null;
 let bulkResultsData = [];
@@ -74,7 +76,7 @@ function parsePmid(input) {
 // --- Utilities ---
 
 function showSection(section) {
-  [loadingSection, errorSection, resultsSection, bulkResults].forEach(
+  [loadingSection, errorSection, resultsSection, bulkResults, searchResultsSection].forEach(
     (s) => (s.hidden = true)
   );
   selfRetractedWarning.hidden = true;
@@ -379,9 +381,61 @@ function handlePrimaryCheck() {
   const pmid = parsePmid(raw);
   if (pmid) { checkSingle(null, pmid); return; }
   const doi = cleanDoi(raw);
-  if (!isValidDoi(doi)) { showError(i18n.t("errors.invalidDoi")); return; }
-  checkSingle(doi);
+  if (isValidDoi(doi)) { checkSingle(doi); return; }
+  // Not a DOI/PMID/arXiv — treat as title search
+  // Extract query from Google Scholar URL if applicable
+  var query = raw;
+  var scholarMatch = raw.match(/scholar\.google\.[^/]+\/scholar\?.*q=([^&]+)/i);
+  if (scholarMatch) query = decodeURIComponent(scholarMatch[1].replace(/\+/g, " "));
+  if (query.length < 3) { showError(i18n.t("errors.invalidDoi")); return; }
+  searchByTitle(query);
 }
+
+async function searchByTitle(query) {
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
+
+  showSection(loadingSection);
+  setLoadingStep(i18n.t("loading.searching"));
+  checkBtn.disabled = true;
+
+  try {
+    const res = await fetch(`/api/search-papers?q=${encodeURIComponent(query)}`, { signal: currentController.signal });
+    let data;
+    try { data = await res.json(); } catch {
+      showError(i18n.t("errors.unexpectedResponse")); return;
+    }
+    if (!res.ok) { showError(data.error || i18n.t("errors.genericError")); return; }
+    if (!data.results || data.results.length === 0) {
+      showError(i18n.t("errors.noSearchResults")); return;
+    }
+    // If only 1 result with DOI, go directly to check
+    if (data.results.length === 1 && data.results[0].doi) {
+      checkSingle(data.results[0].doi);
+      return;
+    }
+    renderSearchResults(data.results);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    showError(i18n.t("errors.networkError"));
+  } finally {
+    checkBtn.disabled = false;
+    currentController = null;
+  }
+}
+
+function renderSearchResults(results) {
+  showSection(searchResultsSection);
+  searchList.innerHTML = results.map((r) => {
+    var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
+    return `
+    <button class="search-item" data-doi="${escapeHtml(r.doi || "")}" type="button">
+      <span class="search-title">${escapeHtml(r.title || i18n.t("results.titleUnavailable"))}${retractedBadge}</span>
+      <span class="search-meta">${escapeHtml(r.authors || "")}${r.year ? " (" + r.year + ")" : ""} &middot; ${r.refs} ${i18n.t("results.references")}${r.cited_by ? " &middot; " + i18n.t("search.citedBy", { count: r.cited_by }) : ""}</span>
+    </button>`;
+  }).join("");
+}
+
 
 function handleBulkCheck() {
   const text = bulkInput.value.trim();
@@ -410,6 +464,14 @@ document.querySelectorAll("[data-doi]").forEach((btn) => {
     doiInput.value = btn.dataset.doi;
     handlePrimaryCheck();
   });
+});
+
+// Search result click
+searchList.addEventListener("click", (e) => {
+  var item = e.target.closest(".search-item");
+  if (!item) return;
+  var doi = item.dataset.doi;
+  if (doi) { doiInput.value = doi; checkSingle(doi); }
 });
 
 // File upload

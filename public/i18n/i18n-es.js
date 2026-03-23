@@ -14,17 +14,19 @@ i18n.addLang("es", {
       subtitle: "Herramienta gratuita que comprueba autom\u00e1ticamente si las referencias de un art\u00edculo cient\u00edfico han sido retractadas, retiradas o tienen expresiones de preocupaci\u00f3n. Pega un DOI y obt\u00e9n resultados en segundos."
     },
     search: {
-      placeholder: "Ingresa un DOI o arXiv ID \u2014 por ejemplo, 10.1038/s41577-020-0311-8",
+      placeholder: "T\u00edtulo del art\u00edculo, DOI, PMID o arXiv ID",
       checkBtn: "Verificar",
       tryLabel: "Prueba:",
       checkMultiple: "Verificar m\u00faltiples art\u00edculos",
       uploadBibRis: "Subir archivo BibTeX/RIS",
       bulkPlaceholder: "Pega varios DOIs, uno por l\u00ednea",
-      checkAll: "Verificar todos"
+      checkAll: "Verificar todos",
+      selectPaper: "Selecciona el art\u00edculo que deseas verificar:",
+      citedBy: "citado por {count}"
     },
     history: { recent: "Recientes:" },
     loading: {
-      lookingUp: "Buscando art\u00edculo\u2026",
+      lookingUp: "Buscando art\u00edculo\u2026", searching: "Buscando\u2026",
       checkingNofM: "Verificando {current} de {total}\u2026"
     },
     errors: {
@@ -35,7 +37,8 @@ i18n.addLang("es", {
       fileTooLarge: "El archivo es demasiado grande (m\u00e1x. 1 MB).",
       unexpectedResponse: "Respuesta inesperada del servidor. Intenta de nuevo.",
       genericError: "Ocurri\u00f3 un error.",
-      networkError: "Error de conexi\u00f3n. Verifica tu conexi\u00f3n a internet e intenta de nuevo."
+      networkError: "Error de conexi\u00f3n. Verifica tu conexi\u00f3n a internet e intenta de nuevo.",
+      noSearchResults: "No se encontraron art\u00edculos. Prueba con un t\u00edtulo m\u00e1s espec\u00edfico o un DOI."
     },
     results: {
       allClear: "Sin problemas \u2014 las {total} referencias verificadas est\u00e1n limpias.",
