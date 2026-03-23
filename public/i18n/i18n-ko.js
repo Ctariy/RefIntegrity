@@ -53,6 +53,7 @@ i18n.addLang("ko", {
       references: "\ucc38\uace0\ubb38\ud5cc",
       flagged: "\ubb38\uc81c \ubc1c\uacac",
       errorsLabel: "\uc624\ub958",
+      disclaimer: "{total}\uac74\uc758 \ucc38\uace0\ubb38\ud5cc\uc744 \ub2e4\uc74c \ucca0\ud68c \ub370\uc774\ud130\ubca0\uc774\uc2a4\uc5d0\uc11c \ud655\uc778:",
       clean: "\uc815\uc0c1"
     },
     statuses: {

@@ -360,6 +360,12 @@ main {
 }
 .btn-text:hover { text-decoration: underline; }
 .separator { color: var(--border); font-size: 0.75rem; }
+.result-disclaimer {
+  font-size: 0.75rem; color: var(--muted); margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--border); line-height: 1.5;
+}
+.result-disclaimer a { color: var(--muted); text-decoration: underline; }
+.result-disclaimer a:hover { color: var(--navy); }
 
 /* Reference cards */
 .ref-card {

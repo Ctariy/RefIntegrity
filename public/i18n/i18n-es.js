@@ -53,6 +53,7 @@ i18n.addLang("es", {
       references: "referencias",
       flagged: "con alertas",
       errorsLabel: "errores",
+      disclaimer: "Se verificaron {total} referencias contra los registros de retracci\u00f3n de",
       clean: "Sin problemas"
     },
     statuses: {

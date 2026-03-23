@@ -249,6 +249,16 @@ function renderSingleResults(data) {
   } else {
     flaggedList.innerHTML = "";
   }
+
+  // Disclaimer with coverage metric
+  var disclaimer = document.getElementById("result-disclaimer");
+  if (disclaimer && total > 0) {
+    disclaimer.hidden = false;
+    disclaimer.innerHTML = i18n.t("results.disclaimer", { total }) +
+      ' <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> &amp; <a href="https://www.crossref.org" target="_blank" rel="noopener">Crossref</a>.';
+  } else if (disclaimer) {
+    disclaimer.hidden = true;
+  }
 }
 
 // --- Bulk check ---

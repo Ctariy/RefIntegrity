@@ -53,6 +53,7 @@ i18n.addLang("pt", {
       references: "refer\u00eancias",
       flagged: "sinalizadas",
       errorsLabel: "erros",
+      disclaimer: "{total} refer\u00eancias verificadas nos registros de retra\u00e7\u00e3o de",
       clean: "Sem problemas"
     },
     statuses: {

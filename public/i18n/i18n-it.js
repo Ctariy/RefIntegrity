@@ -53,6 +53,7 @@ i18n.addLang("it", {
       references: "riferimenti",
       flagged: "segnalati",
       errorsLabel: "errori",
+      disclaimer: "{total} riferimenti verificati nei registri di ritrattazione di",
       clean: "Integro"
     },
     statuses: {

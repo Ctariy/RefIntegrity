@@ -53,6 +53,7 @@ i18n.addLang("de", {
       references: "Referenzen",
       flagged: "markiert",
       errorsLabel: "Fehler",
+      disclaimer: "{total} Referenzen gegen Retraktionsdaten gepr\u00fcft von",
       clean: "Unbedenklich"
     },
     statuses: {

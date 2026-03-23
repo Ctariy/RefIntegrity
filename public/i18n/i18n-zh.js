@@ -53,6 +53,7 @@ i18n.addLang("zh", {
       references: "\u53c2\u8003\u6587\u732e",
       flagged: "\u5b58\u5728\u95ee\u9898",
       errorsLabel: "\u9519\u8bef",
+      disclaimer: "\u5df2\u901a\u8fc7\u4ee5\u4e0b\u6570\u636e\u6e90\u68c0\u67e5 {total} \u7bc7\u53c2\u8003\u6587\u732e\u7684\u64a4\u7a3f\u8bb0\u5f55\uff1a",
       clean: "\u6b63\u5e38"
     },
     statuses: {

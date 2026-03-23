@@ -63,7 +63,8 @@
       copyResults: "Copy results", downloadCsv: "Download CSV",
       copiedToClipboard: "Copied to clipboard",
       papers: "papers", references: "references", flagged: "flagged",
-      errorsLabel: "errors", clean: "Clean"
+      errorsLabel: "errors", clean: "Clean",
+      disclaimer: "Checked {total} references against retraction records from"
     },
     statuses: { retracted: "Retracted", expressionOfConcern: "Expression of Concern", withdrawn: "Withdrawn", removed: "Removed" },
     footer: {

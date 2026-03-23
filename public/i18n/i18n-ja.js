@@ -53,6 +53,7 @@ i18n.addLang("ja", {
       references: "\u5f15\u7528\u6587\u732e",
       flagged: "\u8981\u6ce8\u610f",
       errorsLabel: "\u30a8\u30e9\u30fc",
+      disclaimer: "{total}\u4ef6\u306e\u5f15\u7528\u6587\u732e\u3092\u4ee5\u4e0b\u306e\u64a4\u56de\u30c7\u30fc\u30bf\u3067\u78ba\u8a8d\uff1a",
       clean: "\u554f\u984c\u306a\u3057"
     },
     statuses: {

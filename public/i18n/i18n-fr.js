@@ -53,6 +53,7 @@ i18n.addLang("fr", {
       references: "r\u00e9f\u00e9rences",
       flagged: "signal\u00e9es",
       errorsLabel: "erreurs",
+      disclaimer: "{total} r\u00e9f\u00e9rences v\u00e9rifi\u00e9es dans les registres de r\u00e9tractation de",
       clean: "Conforme"
     },
     statuses: {
