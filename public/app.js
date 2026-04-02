@@ -477,9 +477,13 @@ function renderSearchResults(results) {
 
 
 function handleBulkCheck() {
-  const text = bulkInput.value.trim();
-  if (!text) { showError(i18n.t("errors.pasteDois")); return; }
-  const dois = extractDois(text);
+  // Also grab anything typed but not yet added as a tag
+  if (bulkTextInput && bulkTextInput.value.trim()) {
+    addBulkTags(bulkTextInput.value);
+    bulkTextInput.value = "";
+  }
+  if (bulkTags.length === 0) { showError(i18n.t("errors.pasteDois")); return; }
+  const dois = bulkTags.slice();
   if (dois.length === 0) { showError(i18n.t("errors.noValidDois")); return; }
   if (dois.length === 1) { doiInput.value = dois[0]; checkSingle(dois[0]); return; }
   checkBulk(dois);
@@ -493,21 +497,96 @@ doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrima
 function setBulkMode(on) {
   // Transfer content between inputs
   if (on && !isBulkMode) {
-    if (doiInput.value.trim() && !bulkInput.value.trim()) bulkInput.value = doiInput.value;
+    var val = doiInput.value.trim();
+    if (val && bulkTags.length === 0) addBulkTags(val);
   } else if (!on && isBulkMode) {
-    var lines = bulkInput.value.trim().split("\n").filter(Boolean);
-    if (lines.length <= 1 && !doiInput.value.trim()) doiInput.value = lines[0] || "";
+    if (bulkTags.length === 1 && !doiInput.value.trim()) doiInput.value = bulkTags[0];
   }
   isBulkMode = on;
   inputSingle.hidden = on;
   inputBulk.hidden = !on;
   modeToggle.textContent = i18n.t(on ? "search.switchSingle" : "search.switchBulk");
-  if (on) bulkInput.focus();
+  if (on && bulkTextInput) bulkTextInput.focus();
   else doiInput.focus();
 }
 
 modeToggle.addEventListener("click", () => setBulkMode(!isBulkMode));
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
+
+// --- Tag input for bulk mode ---
+var tagList = document.getElementById("tag-list");
+var bulkTextInput = document.getElementById("bulk-text-input");
+var tagInputWrap = document.getElementById("tag-input");
+var bulkCountEl = document.getElementById("bulk-count");
+var bulkTags = []; // array of DOI strings
+
+function syncTagsToTextarea() {
+  bulkInput.value = bulkTags.join("\n");
+  if (bulkCountEl) {
+    if (bulkTags.length > 0) {
+      bulkCountEl.hidden = false;
+      bulkCountEl.textContent = bulkTags.length + " DOI" + (bulkTags.length > 1 ? "s" : "");
+    } else {
+      bulkCountEl.hidden = true;
+    }
+  }
+}
+
+function addBulkTags(text) {
+  var dois = extractDois(text);
+  var added = 0;
+  dois.forEach(function (d) {
+    if (bulkTags.indexOf(d) === -1) {
+      bulkTags.push(d);
+      added++;
+    }
+  });
+  if (added > 0) renderBulkTags();
+}
+
+function removeBulkTag(index) {
+  bulkTags.splice(index, 1);
+  renderBulkTags();
+}
+
+function renderBulkTags() {
+  tagList.innerHTML = bulkTags.map(function (doi, i) {
+    return '<span class="doi-tag">' + escapeHtml(doi) +
+      '<button type="button" class="doi-tag-remove" data-idx="' + i + '">&times;</button></span>';
+  }).join("");
+  syncTagsToTextarea();
+}
+
+if (bulkTextInput) {
+  bulkTextInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      var val = bulkTextInput.value.trim();
+      if (val) { addBulkTags(val); bulkTextInput.value = ""; }
+    }
+    // Backspace on empty input removes last tag
+    if (e.key === "Backspace" && !bulkTextInput.value && bulkTags.length > 0) {
+      removeBulkTag(bulkTags.length - 1);
+    }
+  });
+
+  bulkTextInput.addEventListener("paste", function (e) {
+    e.preventDefault();
+    var pasted = (e.clipboardData || window.clipboardData).getData("text");
+    if (pasted) { addBulkTags(pasted); bulkTextInput.value = ""; }
+  });
+}
+
+if (tagList) {
+  tagList.addEventListener("click", function (e) {
+    var btn = e.target.closest(".doi-tag-remove");
+    if (btn) removeBulkTag(parseInt(btn.dataset.idx, 10));
+  });
+}
+
+if (tagInputWrap) {
+  tagInputWrap.addEventListener("click", function () { bulkTextInput.focus(); });
+}
 
 // Try link
 document.querySelectorAll("[data-doi]").forEach((btn) => {
@@ -526,7 +605,7 @@ searchList.addEventListener("click", (e) => {
   if (doi) { doiInput.value = doi; checkSingle(doi); }
 });
 
-// File upload — auto-switch to bulk mode
+// File upload — auto-switch to bulk mode, parse DOIs as tags
 fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -535,7 +614,7 @@ fileInput.addEventListener("change", (e) => {
   fileNameEl.hidden = false;
   setBulkMode(true);
   const reader = new FileReader();
-  reader.onload = (ev) => { bulkInput.value = ev.target.result; };
+  reader.onload = (ev) => { addBulkTags(ev.target.result); };
   reader.readAsText(file);
 });
 
