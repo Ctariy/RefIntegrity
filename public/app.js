@@ -33,7 +33,8 @@ const searchList = document.getElementById("search-list");
 let lastResult = null;
 let bulkResultsData = [];
 let currentController = null;
-var lastSearchResults = null;  // stored for "back to results"
+var lastSearchResults = null;
+var lastSearchQuery = null;
 
 // --- DOI extraction ---
 
@@ -541,6 +542,7 @@ async function searchByTitle(query) {
 
 function renderSearchResults(results) {
   lastSearchResults = results;
+  if (doiInput.value.trim()) lastSearchQuery = doiInput.value.trim();
   showSection(searchResultsSection);
   searchList.innerHTML = results.map((r) => {
     var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
@@ -591,7 +593,10 @@ modeToggle.addEventListener("click", () => setBulkMode(!isBulkMode));
 
 // Back to search results
 document.getElementById("back-to-search").addEventListener("click", function () {
-  if (lastSearchResults) renderSearchResults(lastSearchResults);
+  if (lastSearchResults) {
+    if (lastSearchQuery) doiInput.value = lastSearchQuery;
+    renderSearchResults(lastSearchResults);
+  }
 });
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
 
