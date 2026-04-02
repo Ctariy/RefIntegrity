@@ -6,6 +6,6 @@ export default defineConfig({
   expect: { timeout: 30000 },
   retries: 1,
   use: {
-    baseURL: 'https://refintegrity.netlify.app',
+    baseURL: 'https://refintegrity.com',
   },
 });

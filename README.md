@@ -7,7 +7,7 @@
 
 Paste a DOI and RefIntegrity will cross-check the entire reference list against the [Retraction Watch](https://retractionwatch.com/) database in seconds. No login, no paywall.
 
-**Live at: [refintegrity.netlify.app](https://refintegrity.netlify.app)**
+**Live at: [refintegrity.com](https://refintegrity.com)**
 
 ---
 
@@ -118,10 +118,10 @@ Also accepts `POST` with JSON body: `{ "doi": "10.1234/..." }`.
 ### MCP Server
 
 ```
-https://refintegrity.netlify.app/mcp
+https://refintegrity.com/mcp
 ```
 
-Works with Claude Desktop, Claude Code, and Cursor. See the [live site](https://refintegrity.netlify.app) for setup instructions.
+Works with Claude Desktop, Claude Code, and Cursor. See the [live site](https://refintegrity.com) for setup instructions.
 
 ## Project Structure
 

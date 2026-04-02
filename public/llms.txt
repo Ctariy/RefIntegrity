@@ -4,9 +4,9 @@
 
 ## API
 
-- [Check DOI](https://refintegrity.netlify.app/api/check-doi?doi=10.1038/s41577-020-0311-8): GET /api/check-doi?doi={doi} — returns retraction status of all references
-- [OpenAPI Spec](https://refintegrity.netlify.app/openapi.json): Full API schema (OpenAPI 3.0)
-- [MCP Server](https://refintegrity.netlify.app/mcp): Model Context Protocol endpoint for AI agents
+- [Check DOI](https://refintegrity.com/api/check-doi?doi=10.1038/s41577-020-0311-8): GET /api/check-doi?doi={doi} — returns retraction status of all references
+- [OpenAPI Spec](https://refintegrity.com/openapi.json): Full API schema (OpenAPI 3.0)
+- [MCP Server](https://refintegrity.com/mcp): Model Context Protocol endpoint for AI agents
 
 ## About
 

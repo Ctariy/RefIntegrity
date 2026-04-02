@@ -319,7 +319,7 @@ test.describe("Copy results", () => {
 
 // ─── 14. AI Agent Optimization ─────────────────────────────
 
-const BASE_URL = "https://refintegrity.netlify.app";
+const BASE_URL = "https://refintegrity.com";
 
 test.describe("AI Agent Optimization", () => {
   test("robots.txt accessible and allows AI bots", async ({ request }) => {
@@ -334,7 +334,7 @@ test.describe("AI Agent Optimization", () => {
     const res = await request.get(`${BASE_URL}/sitemap.xml`);
     expect(res.status()).toBe(200);
     const text = await res.text();
-    expect(text).toContain("refintegrity.netlify.app");
+    expect(text).toContain("refintegrity.com");
   });
 
   test("llms.txt accessible and follows spec", async ({ request }) => {

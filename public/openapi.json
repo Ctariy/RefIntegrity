@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "contact": {
       "name": "RefIntegrity",
-      "url": "https://refintegrity.netlify.app"
+      "url": "https://refintegrity.com"
     },
     "license": {
       "name": "MIT"
@@ -14,7 +14,7 @@
   },
   "servers": [
     {
-      "url": "https://refintegrity.netlify.app",
+      "url": "https://refintegrity.com",
       "description": "Production"
     }
   ],
