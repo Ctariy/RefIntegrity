@@ -491,6 +491,13 @@ checkBtn.addEventListener("click", handlePrimaryCheck);
 doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrimaryCheck(); });
 
 function setBulkMode(on) {
+  // Transfer content between inputs
+  if (on && !isBulkMode) {
+    if (doiInput.value.trim() && !bulkInput.value.trim()) bulkInput.value = doiInput.value;
+  } else if (!on && isBulkMode) {
+    var lines = bulkInput.value.trim().split("\n").filter(Boolean);
+    if (lines.length <= 1 && !doiInput.value.trim()) doiInput.value = lines[0] || "";
+  }
   isBulkMode = on;
   inputSingle.hidden = on;
   inputBulk.hidden = !on;
