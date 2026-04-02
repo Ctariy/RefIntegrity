@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://refintegrity.com/</loc>
-    <lastmod>2026-03-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://refintegrity.com/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://refintegrity.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://refintegrity.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://refintegrity.com/de/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://refintegrity.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://refintegrity.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://refintegrity.com/ja/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://refintegrity.com/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://refintegrity.com/ko/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://refintegrity.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://refintegrity.com/it/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://refintegrity.com/"/>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
   </url>
+  <url><loc>https://refintegrity.com/es/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/fr/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/de/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/ru/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/zh/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/ja/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/pt/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/ko/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/ar/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://refintegrity.com/it/</loc><lastmod>2026-04-02</lastmod><changefreq>monthly</changefreq></url>
 </urlset>

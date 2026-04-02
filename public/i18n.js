@@ -145,6 +145,15 @@
     var twD = document.querySelector('meta[name="twitter:description"]');
     if (twD) { var v = t("meta.twitterDescription"); if (v !== "meta.twitterDescription") twD.content = v; }
 
+    // Update canonical and og:url for language pages
+    var langUrl = currentLang === DEFAULT_LANG
+      ? "https://refintegrity.com/"
+      : "https://refintegrity.com/" + currentLang + "/";
+    var canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.href = langUrl;
+    var ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.content = langUrl;
+
     // Footer
     var footerLinks = {
       github: '<a href="https://github.com/Ctariy/RefIntegrity" target="_blank" rel="noopener">GitHub</a>',

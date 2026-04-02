@@ -4,6 +4,13 @@
 [functions]
   node_bundler = "esbuild"
 
+# 301 redirect from old Netlify subdomain to custom domain
+[[redirects]]
+  from = "https://refintegrity.netlify.app/*"
+  to = "https://refintegrity.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
