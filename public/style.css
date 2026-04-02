@@ -393,10 +393,17 @@ main {
   padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
   margin-bottom: 16px; font-size: 0.875rem;
 }
-.stat { font-weight: 500; }
-.stat.retracted, .stat.flagged { color: var(--red); font-weight: 600; }
-.stat.clean { color: var(--green); }
-.stat-sep { color: var(--border); }
+.stat-filter {
+  font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 500;
+  color: var(--text-secondary); background: none; border: 1px solid transparent;
+  border-radius: 4px; padding: 4px 10px; cursor: pointer; transition: all 0.15s;
+}
+.stat-filter:hover { background: var(--bg-alt); }
+.stat-filter.active { border-color: var(--border); background: var(--bg-alt); color: var(--text); font-weight: 600; }
+.stat-filter-ok.active { color: var(--green); }
+.stat-filter-warn { color: var(--red); }
+.stat-filter-warn.active { color: var(--red); }
+.stat-filter-err { color: var(--text-secondary); }
 
 /* Actions */
 .result-footer {

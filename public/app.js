@@ -342,23 +342,28 @@ function renderBulkResults() {
   const totalFlagged = bulkResultsData.reduce((s, r) => s + (r.flagged_count || 0), 0);
   const errors = bulkResultsData.filter((r) => r.error).length;
 
+  var cleanCount = bulkResultsData.filter((r) => !r.error && r.flagged_count === 0).length;
+  var flaggedPapers = bulkResultsData.filter((r) => r.flagged_count > 0).length;
+
   bulkSummary.innerHTML = [
-    `<span class="stat">${bulkResultsData.length} ${i18n.t("results.papers")}</span>`,
-    `<span class="stat">${totalRefs} ${i18n.t("results.references")}</span>`,
-    `<span class="stat flagged">${totalFlagged} ${i18n.t("results.flagged")}</span>`,
-    errors > 0 ? `<span class="stat">${errors} ${i18n.t("results.errorsLabel")}</span>` : "",
-  ].filter(Boolean).join('<span class="stat-sep">&middot;</span>');
+    `<button type="button" class="stat-filter active" data-filter="all">${bulkResultsData.length} ${i18n.t("results.papers")}</button>`,
+    cleanCount > 0 ? `<button type="button" class="stat-filter stat-filter-ok" data-filter="clean">${cleanCount} ${i18n.t("results.clean")}</button>` : "",
+    flaggedPapers > 0 ? `<button type="button" class="stat-filter stat-filter-warn" data-filter="flagged">${flaggedPapers} ${i18n.t("results.flagged")}</button>` : "",
+    errors > 0 ? `<button type="button" class="stat-filter stat-filter-err" data-filter="errors">${errors} ${i18n.t("results.errorsLabel")}</button>` : "",
+  ].filter(Boolean).join("");
 
   let html = `<table class="bulk-table"><thead><tr><th>DOI</th><th>Title</th><th>Refs</th><th>Status</th></tr></thead><tbody>`;
   bulkResultsData.forEach((r, idx) => {
     const cls = r.error ? "status-err" : r.flagged_count > 0 ? "status-warn" : "status-ok";
     const hasFlagged = !r.error && r.flagged_count > 0 && r.flagged_references && r.flagged_references.length > 0;
     const txt = r.error || (r.flagged_count > 0 ? `${r.flagged_count} ${i18n.t("results.flagged")}` : i18n.t("results.clean"));
-    const expandAttr = hasFlagged ? ` class="bulk-row-expandable" data-bulk-idx="${idx}"` : "";
+    const rowType = r.error ? "errors" : r.flagged_count > 0 ? "flagged" : "clean";
+    const expandClass = hasFlagged ? " bulk-row-expandable" : "";
+    const expandData = hasFlagged ? ` data-bulk-idx="${idx}"` : "";
     const arrow = hasFlagged ? ' <span class="expand-arrow">&#9656;</span>' : "";
-    html += `<tr${expandAttr}><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}${arrow}</td></tr>`;
+    html += `<tr class="bulk-data-row${expandClass}" data-row-type="${rowType}"${expandData}><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}${arrow}</td></tr>`;
     if (hasFlagged) {
-      html += `<tr class="bulk-detail-row" id="bulk-detail-${idx}" hidden><td colspan="4"><div class="bulk-detail-cards">`;
+      html += `<tr class="bulk-detail-row" data-row-type="flagged" id="bulk-detail-${idx}" hidden><td colspan="4"><div class="bulk-detail-cards">`;
       r.flagged_references.forEach((ref) => {
         const cfg = getStatusConfig(ref.status);
         let title = ref.title || i18n.t("results.titleUnavailable");
@@ -395,6 +400,24 @@ function renderBulkResults() {
       detail.hidden = isOpen;
       row.classList.toggle("bulk-row-open", !isOpen);
     }
+  });
+
+  // Filter click handler
+  bulkSummary.addEventListener("click", function (e) {
+    var btn = e.target.closest(".stat-filter");
+    if (!btn) return;
+    var filter = btn.dataset.filter;
+    bulkSummary.querySelectorAll(".stat-filter").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    var rows = bulkTableWrapper.querySelectorAll("[data-row-type]");
+    rows.forEach(function (row) {
+      if (filter === "all" || row.dataset.rowType === filter) {
+        row.hidden = row.classList.contains("bulk-detail-row") && !row.classList.contains("bulk-detail-open");
+        if (row.classList.contains("bulk-data-row")) row.hidden = false;
+      } else {
+        row.hidden = true;
+      }
+    });
   });
 }
 
