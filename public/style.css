@@ -190,13 +190,12 @@ main {
 
 /* Secondary links under input */
 .input-secondary {
-  margin-top: 8px;
+  margin-top: 6px;
   font-size: 0.8125rem;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .link-btn {
@@ -210,15 +209,12 @@ main {
 }
 .link-btn:hover { text-decoration: underline; }
 
-.file-label { cursor: pointer; }
-
-.secondary-sep { color: var(--border); }
-
 .try-link { color: var(--text-secondary); }
 .try-link .link-btn {
   font-family: var(--font-mono);
   font-size: 0.75rem;
 }
+.file-label-inline { cursor: pointer; margin-left: 4px; }
 
 /* Bulk section */
 #bulk-section { margin-bottom: 16px; }
@@ -266,18 +262,7 @@ main {
 
 /* History */
 .history-section {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.history-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  margin-bottom: 16px;
 }
 .history-list { display: flex; flex-wrap: wrap; gap: 4px; }
 .history-item {
@@ -580,7 +565,7 @@ html[dir="rtl"] .ref-card.eoc { border-left: none; border-right: 3px solid #b453
 html[dir="rtl"] .ref-card.withdrawn { border-left: none; border-right: 3px solid var(--text-secondary); }
 html[dir="rtl"] .header-panel-inner ol { padding-left: 0; padding-right: 18px; }
 html[dir="rtl"] .bulk-table th { text-align: right; }
-html[dir="rtl"] .history-section { flex-direction: row-reverse; }
+html[dir="rtl"] .history-list { flex-direction: row-reverse; }
 html[dir="rtl"] .ref-detail span { direction: rtl; }
 html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
 

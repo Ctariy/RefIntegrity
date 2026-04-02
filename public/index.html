@@ -199,33 +199,31 @@
         <button id="check-btn" type="button" data-goatcounter-click="check-single" data-i18n="search.checkBtn">Check</button>
       </div>
       <div class="input-secondary">
-        <span class="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>
-        <span class="secondary-sep">&middot;</span>
-        <button type="button" class="link-btn" id="show-bulk" data-i18n="search.checkMultiple">Check multiple papers</button>
-        <span class="secondary-sep">&middot;</span>
-        <label class="link-btn file-label">
-          <span data-i18n="search.uploadBibRis">Upload .bib / .ris</span>
-          <input type="file" id="file-input" accept=".bib,.ris,.txt,.enw" hidden>
-        </label>
+        <span class="try-link" id="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>
+        <button type="button" class="link-btn" id="show-bulk" data-i18n="search.bulkOrUpload">Bulk check or upload file</button>
+        <input type="file" id="file-input" accept=".bib,.ris,.txt,.enw" hidden>
       </div>
     </section>
 
     <!-- Bulk input (hidden by default) -->
     <section id="bulk-section" class="search-box" hidden>
-      <textarea id="bulk-input" rows="5"
+      <textarea id="bulk-input" rows="4"
                 placeholder="Paste multiple DOIs (one per line) or BibTeX/RIS content"
                 data-i18n-placeholder="search.bulkPlaceholder"
                 aria-label="Enter multiple DOIs"
                 spellcheck="false"></textarea>
       <div class="bulk-actions">
         <button id="bulk-check-btn" type="button" data-goatcounter-click="check-bulk" data-i18n="search.checkAll">Check all</button>
+        <label class="link-btn file-label-inline">
+          <span data-i18n="search.orUploadFile">or upload .bib / .ris</span>
+          <input type="file" id="file-input-bulk" accept=".bib,.ris,.txt,.enw" hidden>
+        </label>
         <span id="file-name" class="file-name" hidden></span>
       </div>
     </section>
 
     <!-- Recent -->
     <section id="history-section" class="history-section" hidden>
-      <span class="history-label" data-i18n="history.recent">Recent:</span>
       <div id="history-list" class="history-list"></div>
     </section>
 

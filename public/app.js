@@ -145,8 +145,15 @@ var HISTORY_COMPACT_COUNT = 3;
 
 function renderHistory() {
   const history = getHistory();
-  if (history.length === 0) { historySection.hidden = true; return; }
+  var tryLink = document.getElementById("try-link");
+  if (history.length === 0) {
+    historySection.hidden = true;
+    if (tryLink) tryLink.hidden = false;
+    return;
+  }
   historySection.hidden = false;
+  // Hide "Try" example when user already has history
+  if (tryLink) tryLink.hidden = true;
   var expanded = historySection.classList.contains("expanded");
   var visible = expanded ? history : history.slice(0, HISTORY_COMPACT_COUNT);
   var html = visible
@@ -482,8 +489,12 @@ checkBtn.addEventListener("click", handlePrimaryCheck);
 doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrimaryCheck(); });
 
 showBulkBtn.addEventListener("click", () => {
-  bulkSection.hidden = !bulkSection.hidden;
-  if (!bulkSection.hidden) bulkInput.focus();
+  if (bulkSection.hidden) {
+    bulkSection.hidden = false;
+    bulkInput.focus();
+  } else {
+    bulkSection.hidden = true;
+  }
 });
 
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
@@ -504,8 +515,8 @@ searchList.addEventListener("click", (e) => {
   if (doi) { doiInput.value = doi; checkSingle(doi); }
 });
 
-// File upload
-fileInput.addEventListener("change", (e) => {
+// File upload (both hidden input and inline bulk input)
+function handleFileUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 1024 * 1024) { showError(i18n.t("errors.fileTooLarge")); return; }
@@ -515,7 +526,10 @@ fileInput.addEventListener("change", (e) => {
   const reader = new FileReader();
   reader.onload = (ev) => { bulkInput.value = ev.target.result; };
   reader.readAsText(file);
-});
+}
+fileInput.addEventListener("change", handleFileUpload);
+var fileInputBulk = document.getElementById("file-input-bulk");
+if (fileInputBulk) fileInputBulk.addEventListener("change", handleFileUpload);
 
 // Copy / CSV
 copyBtn.addEventListener("click", () => {
