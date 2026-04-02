@@ -1,12 +1,14 @@
 // DOM
 const doiInput = document.getElementById("doi-input");
 const checkBtn = document.getElementById("check-btn");
-const showBulkBtn = document.getElementById("show-bulk");
-const bulkSection = document.getElementById("bulk-section");
+const inputSingle = document.getElementById("input-single");
+const inputBulk = document.getElementById("input-bulk");
 const bulkInput = document.getElementById("bulk-input");
 const bulkCheckBtn = document.getElementById("bulk-check-btn");
+const modeToggle = document.getElementById("mode-toggle");
 const fileInput = document.getElementById("file-input");
 const fileNameEl = document.getElementById("file-name");
+var isBulkMode = false;
 const loadingSection = document.getElementById("loading");
 const loadingText = document.getElementById("loading-text");
 const errorSection = document.getElementById("error");
@@ -488,15 +490,16 @@ function handleBulkCheck() {
 checkBtn.addEventListener("click", handlePrimaryCheck);
 doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrimaryCheck(); });
 
-showBulkBtn.addEventListener("click", () => {
-  if (bulkSection.hidden) {
-    bulkSection.hidden = false;
-    bulkInput.focus();
-  } else {
-    bulkSection.hidden = true;
-  }
-});
+function setBulkMode(on) {
+  isBulkMode = on;
+  inputSingle.hidden = on;
+  inputBulk.hidden = !on;
+  modeToggle.textContent = i18n.t(on ? "search.switchSingle" : "search.switchBulk");
+  if (on) bulkInput.focus();
+  else doiInput.focus();
+}
 
+modeToggle.addEventListener("click", () => setBulkMode(!isBulkMode));
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
 
 // Try link
@@ -515,21 +518,18 @@ searchList.addEventListener("click", (e) => {
   if (doi) { doiInput.value = doi; checkSingle(doi); }
 });
 
-// File upload (both hidden input and inline bulk input)
-function handleFileUpload(e) {
+// File upload — auto-switch to bulk mode
+fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 1024 * 1024) { showError(i18n.t("errors.fileTooLarge")); return; }
   fileNameEl.textContent = file.name;
   fileNameEl.hidden = false;
-  bulkSection.hidden = false;
+  setBulkMode(true);
   const reader = new FileReader();
   reader.onload = (ev) => { bulkInput.value = ev.target.result; };
   reader.readAsText(file);
-}
-fileInput.addEventListener("change", handleFileUpload);
-var fileInputBulk = document.getElementById("file-input-bulk");
-if (fileInputBulk) fileInputBulk.addEventListener("change", handleFileUpload);
+});
 
 // Copy / CSV
 copyBtn.addEventListener("click", () => {

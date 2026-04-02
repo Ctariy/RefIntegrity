@@ -216,11 +216,10 @@ main {
 }
 .file-label-inline { cursor: pointer; font-size: 0.75rem; }
 
-/* Bulk section */
-#bulk-section { margin-bottom: 16px; }
-
-#bulk-input {
-  width: 100%;
+/* Bulk mode textarea in input-row */
+#input-bulk { align-items: stretch; }
+#input-bulk textarea {
+  flex: 1;
   padding: 9px 12px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -232,32 +231,8 @@ main {
   resize: vertical;
   line-height: 1.7;
 }
-#bulk-input:focus { border-color: var(--navy); box-shadow: 0 0 0 1px var(--navy); }
-
-.bulk-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-.bulk-actions-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bulk-actions button {
-  padding: 9px 20px;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--navy);
-  border: 1px solid var(--navy);
-  border-radius: 4px;
-  cursor: pointer;
-}
-.bulk-actions button:hover { background: var(--navy-dark); }
-.bulk-actions button:disabled { opacity: 0.5; cursor: default; }
+#input-bulk textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 1px var(--navy); }
+#input-bulk button { align-self: flex-end; }
 
 .file-name {
   font-size: 0.75rem;
@@ -580,8 +555,9 @@ html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
   .page-title h1 { font-size: 1.5rem; }
   .input-row { flex-direction: column; }
   .input-row button { width: 100%; }
-  .input-secondary { flex-direction: column; gap: 4px; }
-  .secondary-sep { display: none; }
+  .input-secondary { flex-wrap: wrap; gap: 4px; }
+  #input-bulk { flex-direction: column; }
+  #input-bulk button { width: 100%; }
   .result-summary { flex-direction: column; gap: 2px; }
   .stat-sep { display: none; }
   .bulk-table { font-size: 0.75rem; }

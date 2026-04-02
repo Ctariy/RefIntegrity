@@ -40,8 +40,8 @@
       uploadBibRis: "Upload .bib / .ris",
       bulkPlaceholder: "Paste DOIs, PMIDs, or arXiv IDs (one per line) or BibTeX/RIS content",
       checkAll: "Check all",
-      bulkOrUpload: "Bulk check or upload file",
-      orUploadFile: "or upload .bib / .ris",
+      switchBulk: "Bulk mode",
+      switchSingle: "Single mode",
       selectPaper: "Select the paper you want to check:",
       citedBy: "cited by {count}"
     },
