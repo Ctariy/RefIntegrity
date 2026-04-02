@@ -198,7 +198,14 @@ function renderSingleResults(data) {
 
   if (data.is_retracted) selfRetractedWarning.hidden = false;
 
-  // Hero — the main takeaway
+  // Title first — the user wants to confirm they checked the right paper
+  if (data.title) {
+    paperTitle.innerHTML = `<h2>${escapeHtml(data.title)}</h2>`;
+  } else {
+    paperTitle.innerHTML = "";
+  }
+
+  // Summary line — calm, informative
   const total = data.referenced_works_count;
   const checked = data.checked_count != null ? data.checked_count : total;
   const flagged = data.flagged_count;
@@ -227,17 +234,10 @@ function renderSingleResults(data) {
     resultHero.innerHTML += coverageHtml;
   }
 
-  // Title
-  if (data.title) {
-    paperTitle.innerHTML = `<h2>${escapeHtml(data.title)}</h2>`;
-  } else {
-    paperTitle.innerHTML = "";
-  }
-
   // Export
   exportActions.hidden = flagged === 0 && total === 0;
 
-  // Flagged cards
+  // Flagged cards — clean, compact
   if (data.flagged_references && data.flagged_references.length > 0) {
     flaggedList.innerHTML = data.flagged_references.map((ref) => {
       const cfg = getStatusConfig(ref.status);
@@ -245,16 +245,20 @@ function renderSingleResults(data) {
         ? ref.doi.startsWith("http") ? ref.doi : `https://doi.org/${ref.doi}`
         : null;
 
-      let detailsHtml = "";
-      if (ref.update_date || ref.update_label || ref.notice_doi) {
-        const parts = [];
-        if (ref.update_date) parts.push(`<span>Date: ${escapeHtml(ref.update_date)}</span>`);
-        if (ref.update_label) parts.push(`<span>Type: ${escapeHtml(ref.update_label)}</span>`);
-        if (ref.notice_doi) {
-          const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
-          parts.push(`<span>Notice: <a href="${u}" target="_blank" rel="noopener">${escapeHtml(ref.notice_doi)}</a></span>`);
-        }
-        detailsHtml = `<div class="ref-detail">${parts.join("")}</div>`;
+      // Strip redundant "RETRACTED: " prefix from title since badge shows status
+      let title = ref.title || i18n.t("results.titleUnavailable");
+      title = title.replace(/^(RETRACTED|WITHDRAWN|REMOVED):\s*/i, "");
+
+      // Compact metadata line: year · date · type · notice
+      const metaParts = [];
+      if (ref.publication_year) metaParts.push(ref.publication_year);
+      if (ref.update_date) metaParts.push(escapeHtml(ref.update_date));
+      if (ref.update_label) metaParts.push(escapeHtml(ref.update_label));
+
+      let noticeHtml = "";
+      if (ref.notice_doi) {
+        const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
+        noticeHtml = ` · <a href="${u}" target="_blank" rel="noopener">notice</a>`;
       }
 
       let reasonsHtml = "";
@@ -264,13 +268,15 @@ function renderSingleResults(data) {
 
       return `
       <div class="ref-card ${cfg.cardClass}">
-        <span class="badge ${cfg.cssClass}">${cfg.label}</span>
-        <h3>${escapeHtml(ref.title || i18n.t("results.titleUnavailable"))}</h3>
-        <div class="ref-meta">
-          ${doiUrl ? `<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener"><code>${escapeHtml(ref.doi)}</code></a>` : ""}
-          ${ref.publication_year ? `<span>${ref.publication_year}</span>` : ""}
+        <div class="ref-card-header">
+          <span class="badge ${cfg.cssClass}">${cfg.label}</span>
+          <h3>${escapeHtml(title)}</h3>
         </div>
-        ${detailsHtml}
+        <div class="ref-meta">
+          ${doiUrl ? `<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(ref.doi)}</a>` : ""}
+          ${metaParts.length ? `<span class="meta-sep">${metaParts.join(" · ")}</span>` : ""}
+          ${noticeHtml}
+        </div>
         ${reasonsHtml}
       </div>`;
     }).join("");
