@@ -146,48 +146,73 @@ main {
 /* Search box */
 .search-box { margin-bottom: 16px; }
 
-/* Primary input row */
-.input-row {
-  display: flex;
-  gap: 8px;
+/* Input with inline submit button */
+.input-wrap {
+  position: relative;
 }
-.input-row[hidden] { display: none; }
+.input-wrap[hidden] { display: none; }
 
-.input-row input {
-  flex: 1;
-  padding: 11px 14px;
+.input-wrap input {
+  width: 100%;
+  padding: 12px 48px 12px 14px;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 8px;
   outline: none;
   background: var(--bg);
   color: var(--text);
 }
-.input-row input:focus {
+.input-wrap input:focus {
   border-color: var(--navy);
   box-shadow: 0 0 0 1px var(--navy);
 }
-.input-row input::placeholder {
+.input-wrap input::placeholder {
   color: #9aa0a6;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
 }
-
-.input-row button {
-  padding: 11px 24px;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #fff;
+.input-submit {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--navy);
-  border: 1px solid var(--navy);
-  border-radius: 4px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  white-space: nowrap;
+  transition: background 0.15s;
 }
-.input-row button:hover { background: var(--navy-dark); border-color: var(--navy-dark); }
-.input-row button:disabled { opacity: 0.5; cursor: default; }
+.input-submit:hover { background: var(--navy-dark); }
+.input-submit:disabled { opacity: 0.4; cursor: default; }
+
+/* Bulk textarea variant */
+.input-wrap-bulk textarea {
+  width: 100%;
+  padding: 12px 14px;
+  padding-right: 48px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+  line-height: 1.7;
+}
+.input-wrap-bulk textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 1px var(--navy); }
+.input-submit-bulk {
+  top: auto;
+  bottom: 10px;
+  transform: none;
+}
 
 /* Secondary links under input */
 .input-secondary {
@@ -217,23 +242,6 @@ main {
 }
 .file-label-inline { cursor: pointer; font-size: 0.75rem; }
 
-/* Bulk mode textarea in input-row */
-#input-bulk { align-items: stretch; }
-#input-bulk textarea {
-  flex: 1;
-  padding: 9px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  outline: none;
-  background: var(--bg);
-  color: var(--text);
-  resize: vertical;
-  line-height: 1.7;
-}
-#input-bulk textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 1px var(--navy); }
-#input-bulk button { align-self: flex-end; }
 
 .file-name {
   font-size: 0.75rem;
@@ -539,7 +547,9 @@ footer { border-top: 1px solid var(--border); margin-top: 48px; }
 /* RTL support */
 html[dir="rtl"] .header-inner { flex-direction: row-reverse; }
 html[dir="rtl"] .site-header nav { flex-direction: row-reverse; }
-html[dir="rtl"] .input-row { flex-direction: row-reverse; }
+html[dir="rtl"] .input-submit { right: auto; left: 6px; }
+html[dir="rtl"] .input-wrap input { padding: 12px 14px 12px 48px; }
+html[dir="rtl"] .input-wrap-bulk textarea { padding-right: 14px; padding-left: 48px; }
 html[dir="rtl"] .input-secondary { flex-direction: row-reverse; }
 html[dir="rtl"] .ref-card.retracted { border-left: none; border-right: 3px solid var(--red); }
 html[dir="rtl"] .ref-card.eoc { border-left: none; border-right: 3px solid #b45309; }
@@ -554,11 +564,7 @@ html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
 @media (max-width: 600px) {
   .page-title { padding: 28px 0 16px; }
   .page-title h1 { font-size: 1.5rem; }
-  .input-row { flex-direction: column; }
-  .input-row button { width: 100%; }
   .input-secondary { flex-wrap: wrap; gap: 4px; }
-  #input-bulk { flex-direction: column; }
-  #input-bulk button { width: 100%; }
   .result-summary { flex-direction: column; gap: 2px; }
   .stat-sep { display: none; }
   .bulk-table { font-size: 0.75rem; }
