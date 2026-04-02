@@ -438,12 +438,55 @@ main {
   color: var(--text-secondary); line-height: 1.4;
 }
 
-/* How it works (visible section) */
-.how-it-works { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); }
-.how-it-works h2 {
-  font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 16px;
+/* Info toggle sections (How it works + FAQ) */
+.info-toggles {
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
 }
-.steps-grid { display: flex; gap: 20px; }
+.info-toggle-section + .info-toggle-section { margin-top: 0; }
+.info-toggle-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.info-toggle-btn::after {
+  content: " +";
+  font-weight: 400;
+  color: var(--muted);
+}
+.info-toggle-btn:hover { color: var(--navy); }
+.info-toggle-section.expanded .info-toggle-btn {
+  color: var(--text);
+  border-bottom-color: transparent;
+}
+.info-toggle-section.expanded .info-toggle-btn::after {
+  content: " \2212";
+}
+.info-toggle-body {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+.info-toggle-section.expanded .info-toggle-body {
+  max-height: 800px;
+  opacity: 1;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+/* Steps inside How it works */
+.steps-grid { display: flex; gap: 20px; padding-top: 12px; }
 .step { flex: 1; }
 .step-num {
   display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center;
@@ -452,54 +495,8 @@ main {
 }
 .step p { font-size: 0.8125rem; color: var(--text-secondary); margin: 0; }
 .step strong { color: var(--text); }
-
-/* Collapsible info sections — collapsed by default */
-.how-it-works .collapsible-body,
-.faq-section .collapsible-body {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-}
-.how-it-works.expanded .collapsible-body,
-.faq-section.expanded .collapsible-body {
-  max-height: 600px;
-  opacity: 1;
-}
-.how-it-works h2,
-.faq-section h2 {
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: color 0.15s ease;
-}
-.how-it-works h2:hover,
-.faq-section h2:hover {
-  color: var(--navy);
-}
-.how-it-works h2::after,
-.faq-section h2::after {
-  content: " +";
-  font-weight: 400;
-  font-size: 0.875rem;
-  color: var(--muted);
-}
-.how-it-works.expanded h2,
-.faq-section.expanded h2 {
-  color: var(--text);
-  cursor: default;
-  margin-bottom: 16px;
-}
-.faq-section.expanded h2 {
-  margin-bottom: 12px;
-}
-.how-it-works.expanded h2::after,
-.faq-section.expanded h2::after {
-  content: none;
-}
-
-/* FAQ (visible section) */
-.faq-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
-.faq-section h2 { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 12px; }
+/* FAQ list inside toggle */
+.faq-list { padding-top: 4px; }
 .faq-item { border-bottom: 1px solid var(--border); }
 .faq-item summary {
   padding: 10px 0; font-size: 0.875rem; font-weight: 600; cursor: pointer;

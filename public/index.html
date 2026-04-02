@@ -276,32 +276,32 @@
       </div>
     </section>
 
-    <!-- How it works (visible on page, collapses on user activity) -->
-    <section class="how-it-works" id="how-section">
-      <h2 data-i18n="howSection.heading">How it works</h2>
-      <div class="collapsible-body">
-        <div class="steps-grid">
-          <div class="step">
-            <span class="step-num">1</span>
-            <p data-i18n-html="howItWorksPanel.step1"><strong>Enter a paper title or identifier</strong> &mdash; or upload a BibTeX/RIS file.</p>
-          </div>
-          <div class="step">
-            <span class="step-num">2</span>
-            <p data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</p>
-          </div>
-          <div class="step">
-            <span class="step-num">3</span>
-            <p data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</p>
+    <!-- Info sections — collapsed by default, toggle on click -->
+    <section class="info-toggles" id="info-toggles">
+      <div class="info-toggle-section" id="how-section">
+        <button type="button" class="info-toggle-btn" data-i18n="howSection.heading">How it works</button>
+        <div class="info-toggle-body">
+          <div class="steps-grid">
+            <div class="step">
+              <span class="step-num">1</span>
+              <p data-i18n-html="howItWorksPanel.step1"><strong>Enter a paper title or identifier</strong> &mdash; or upload a BibTeX/RIS file.</p>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <p data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</p>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <p data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</p>
+            </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- FAQ (visible on page, collapses on user activity) -->
-    <section class="faq-section" id="faq-section">
-      <h2>FAQ</h2>
-      <div class="collapsible-body">
-        <div class="faq-list" id="faq-list"></div>
+      <div class="info-toggle-section" id="faq-section">
+        <button type="button" class="info-toggle-btn">FAQ</button>
+        <div class="info-toggle-body">
+          <div class="faq-list" id="faq-list"></div>
+        </div>
       </div>
     </section>
 

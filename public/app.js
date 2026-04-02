@@ -549,18 +549,12 @@ historyList.addEventListener("click", (e) => {
 
 renderHistory();
 
-// --- Collapsible info sections (How it works + FAQ) ---
-// Collapsed by default; click heading to toggle
-(function () {
-  [document.getElementById("how-section"), document.getElementById("faq-section")].forEach(function (section) {
-    if (!section) return;
-    var heading = section.querySelector("h2");
-    if (!heading) return;
-    heading.addEventListener("click", function () {
-      section.classList.toggle("expanded");
-    });
+// --- Info toggle sections (How it works + FAQ) ---
+document.querySelectorAll(".info-toggle-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    btn.closest(".info-toggle-section").classList.toggle("expanded");
   });
-})();
+});
 
 // --- Header panel toggles ---
 document.querySelectorAll(".nav-toggle").forEach((btn) => {
