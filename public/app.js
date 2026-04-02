@@ -714,7 +714,11 @@ if (tagList) {
 }
 
 if (tagInputWrap) {
-  tagInputWrap.addEventListener("click", function () { bulkTextInput.focus(); });
+  tagInputWrap.addEventListener("click", function (e) {
+    // Don't steal focus if clicking a tag or edit input
+    if (e.target.closest(".doi-tag")) return;
+    bulkTextInput.focus();
+  });
 }
 
 // Try link
