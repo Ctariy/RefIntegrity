@@ -43,7 +43,6 @@
       switchBulk: "Bulk mode",
       switchSingle: "Single mode",
       bulkTagPlaceholder: "DOI, PMID, or arXiv ID — press Enter to add",
-      noDoi: " · No DOI available",
       selectPaper: "Select the paper you want to check:",
       citedBy: "cited by {count}"
     },
