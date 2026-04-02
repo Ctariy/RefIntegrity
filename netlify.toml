@@ -18,56 +18,8 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# i18n: serve index.html for all language prefixes
-[[redirects]]
-  from = "/es/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/fr/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/de/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/ru/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/zh/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/ja/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/pt/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/ko/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/ar/*"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/it/*"
-  to = "/index.html"
-  status = 200
+# i18n: language pages are pre-rendered at build time (scripts/build-i18n-pages.mjs)
+# No rewrite rules needed — each /xx/ has its own index.html
 
 [[headers]]
   for = "/*"

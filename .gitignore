@@ -3,6 +3,16 @@ node_modules/
 .netlify/
 netlify/functions/rw-reasons.json
 netlify/functions/rw-timestamp.txt
+public/es/
+public/fr/
+public/de/
+public/ru/
+public/zh/
+public/ja/
+public/pt/
+public/ko/
+public/ar/
+public/it/
 .claude/
 test-results/
 *.stackdump

@@ -6,7 +6,8 @@
     "dev": "netlify dev",
     "test": "npx playwright test",
     "build:rw-data": "node scripts/build-rw-data.mjs",
-    "build": "node scripts/build-rw-data.mjs"
+    "build:i18n": "node scripts/build-i18n-pages.mjs",
+    "build": "node scripts/build-rw-data.mjs && node scripts/build-i18n-pages.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
