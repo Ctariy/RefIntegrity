@@ -30,9 +30,10 @@
     },
     nav: { howItWorks: "How it works", api: "API", source: "Source" },
     hero: {
-      h1: "Check if your references have been retracted",
-      subtitle: "RefIntegrity checks your paper's reference list against the Retraction Watch database. Enter a paper title, DOI, or PMID to instantly find retracted, withdrawn, or flagged citations. Free, no login required."
+      h1: "Don\u2019t let retracted citations satisfice your paper",
+      subtitle: "94% of citations to retracted papers go undetected. RefIntegrity scans your entire reference list in seconds against the Retraction Watch database. Paste a DOI or upload a BibTeX file \u2014 free, no login."
     },
+    howSection: { heading: "How it works" },
     search: {
       placeholder: "Paper title, DOI, PMID, or arXiv ID",
       checkBtn: "Check", tryLabel: "Try:", checkMultiple: "Check multiple papers",
@@ -175,15 +176,25 @@
       }
     }
 
-    // FAQ JSON-LD schema
-    var faqSchema = document.getElementById("faq-schema");
+    // FAQ JSON-LD schema + visible FAQ section
     var langData = translations[currentLang] || translations[DEFAULT_LANG];
+    var faqSchema = document.getElementById("faq-schema");
     if (faqSchema && langData && langData.faq) {
       var entities = [];
       for (var fi = 0; fi < langData.faq.length; fi++) {
         entities.push({ "@type": "Question", "name": langData.faq[fi].q, "acceptedAnswer": { "@type": "Answer", "text": langData.faq[fi].a } });
       }
       faqSchema.textContent = JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": entities });
+    }
+
+    // Render visible FAQ
+    var faqList = document.getElementById("faq-list");
+    if (faqList && langData && langData.faq) {
+      var html = "";
+      for (var qi = 0; qi < langData.faq.length; qi++) {
+        html += '<details class="faq-item"><summary>' + langData.faq[qi].q + '</summary><p>' + langData.faq[qi].a + '</p></details>';
+      }
+      faqList.innerHTML = html;
     }
   }
 

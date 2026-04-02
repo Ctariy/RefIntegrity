@@ -432,6 +432,31 @@ main {
   color: var(--text-secondary); line-height: 1.4;
 }
 
+/* How it works (visible section) */
+.how-it-works { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); }
+.how-it-works h2 { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; }
+.steps-grid { display: flex; gap: 20px; }
+.step { flex: 1; }
+.step-num {
+  display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center;
+  font-size: 0.75rem; font-weight: 700; color: #fff; background: var(--navy);
+  border-radius: 50%; margin-bottom: 6px;
+}
+.step p { font-size: 0.8125rem; color: var(--text-secondary); margin: 0; }
+.step strong { color: var(--text); }
+
+/* FAQ (visible section) */
+.faq-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+.faq-section h2 { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 12px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item summary {
+  padding: 10px 0; font-size: 0.875rem; font-weight: 600; cursor: pointer;
+  color: var(--text); list-style: none;
+}
+.faq-item summary::before { content: "+ "; color: var(--muted); font-weight: 400; }
+.faq-item[open] summary::before { content: "\2212  "; }
+.faq-item p { font-size: 0.8125rem; color: var(--text-secondary); padding: 0 0 12px; margin: 0; line-height: 1.5; }
+
 /* Bulk results */
 .section-heading { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 12px; }
 .bulk-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; border: 1px solid var(--border); }
@@ -517,4 +542,5 @@ html[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
   .stat-sep { display: none; }
   .bulk-table { font-size: 0.75rem; }
   .header-panel-grid { grid-template-columns: 1fr; }
+  .steps-grid { flex-direction: column; gap: 12px; }
 }

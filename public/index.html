@@ -183,8 +183,8 @@
 
   <main>
     <div class="page-title">
-      <h1 data-i18n="hero.h1">Check if your references have been retracted</h1>
-      <p class="answer-block" data-i18n="hero.subtitle">RefIntegrity checks your paper's reference list against the Retraction Watch database. Enter a paper title, DOI, or PMID to instantly find retracted, withdrawn, or flagged citations. Free, no login required.</p>
+      <h1 data-i18n="hero.h1">Don't let retracted citations satisfice your paper</h1>
+      <p class="answer-block" data-i18n="hero.subtitle">94% of citations to retracted papers go undetected. RefIntegrity scans your entire reference list in seconds against the Retraction Watch database. Paste a DOI or upload a BibTeX file — free, no login.</p>
     </div>
 
     <!-- Primary input -->
@@ -274,6 +274,31 @@
       <div class="result-actions">
         <button id="bulk-csv-btn" type="button" class="btn-text" data-i18n="results.downloadCsv">Download CSV</button>
       </div>
+    </section>
+
+    <!-- How it works (visible on page) -->
+    <section class="how-it-works" id="how-section">
+      <h2 data-i18n="howSection.heading">How it works</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <span class="step-num">1</span>
+          <p data-i18n-html="howItWorksPanel.step1"><strong>Enter a paper title or identifier</strong> &mdash; or upload a BibTeX/RIS file.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <p data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <p data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (visible on page) -->
+    <section class="faq-section" id="faq-section">
+      <h2>FAQ</h2>
+      <div class="faq-list" id="faq-list"></div>
     </section>
 
   </main>
