@@ -388,6 +388,14 @@ main {
 .notice-warning { background: var(--amber-bg); border: 1px solid #d4c5a0; color: var(--amber); }
 
 /* Results */
+.back-link {
+  display: inline-block;
+  font-family: var(--font-sans); font-size: 0.8125rem;
+  color: var(--navy); background: none; border: none;
+  cursor: pointer; padding: 0; margin-bottom: 12px;
+}
+.back-link:hover { text-decoration: underline; }
+.back-link[hidden] { display: none; }
 .result-title { margin-bottom: 8px; }
 .result-title h2 {
   font-family: var(--font-serif);

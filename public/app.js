@@ -33,6 +33,7 @@ const searchList = document.getElementById("search-list");
 let lastResult = null;
 let bulkResultsData = [];
 let currentController = null;
+var lastSearchResults = null;  // stored for "back to results"
 
 // --- DOI extraction ---
 
@@ -204,6 +205,10 @@ async function checkSingle(doi, pmid) {
 
 function renderSingleResults(data) {
   showSection(resultsSection);
+
+  // Show "back to search" if we came from title search
+  var backBtn = document.getElementById("back-to-search");
+  if (backBtn) backBtn.hidden = !lastSearchResults;
 
   if (data.is_retracted) selfRetractedWarning.hidden = false;
 
@@ -486,6 +491,7 @@ function downloadCsv(csvContent, filename) {
 function handlePrimaryCheck() {
   const raw = doiInput.value.trim();
   if (!raw) { showError(i18n.t("errors.enterDoi")); return; }
+  lastSearchResults = null; // clear search context for direct checks
   // Try PMID first (PMID:12345678, pubmed URL, or bare digits after cleaning)
   const pmid = parsePmid(raw);
   if (pmid) { checkSingle(null, pmid); return; }
@@ -534,6 +540,7 @@ async function searchByTitle(query) {
 }
 
 function renderSearchResults(results) {
+  lastSearchResults = results;
   showSection(searchResultsSection);
   searchList.innerHTML = results.map((r) => {
     var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
@@ -581,6 +588,11 @@ function setBulkMode(on) {
 }
 
 modeToggle.addEventListener("click", () => setBulkMode(!isBulkMode));
+
+// Back to search results
+document.getElementById("back-to-search").addEventListener("click", function () {
+  if (lastSearchResults) renderSearchResults(lastSearchResults);
+});
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
 
 // --- Tag input for bulk mode ---

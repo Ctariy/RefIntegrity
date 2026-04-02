@@ -71,6 +71,7 @@
       copiedToClipboard: "Copied to clipboard",
       papers: "papers", references: "references", flagged: "flagged",
       errorsLabel: "errors", clean: "Clean",
+      backToSearch: "Back to search results",
       disclaimer: "Checked {total} references against retraction records from",
       coverageNote: "Checked {checked} of {total} references ({pct}% coverage). Some references could not be resolved."
     },
