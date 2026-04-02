@@ -512,6 +512,7 @@ bulkCheckBtn.addEventListener("click", handleBulkCheck);
 // Try link
 document.querySelectorAll("[data-doi]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (isBulkMode) setBulkMode(false);
     doiInput.value = btn.dataset.doi;
     handlePrimaryCheck();
   });
@@ -558,6 +559,7 @@ bulkCsvBtn.addEventListener("click", () => {
 // History
 historyList.addEventListener("click", (e) => {
   if (e.target.classList.contains("history-item")) {
+    if (isBulkMode) setBulkMode(false);
     doiInput.value = e.target.dataset.doi;
     handlePrimaryCheck();
   }
