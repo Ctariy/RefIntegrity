@@ -556,6 +556,18 @@ main {
 .bulk-table .status-ok { color: var(--green); }
 .bulk-table .status-warn { color: var(--red); font-weight: 600; }
 .bulk-table .status-err { color: var(--text-secondary); }
+.bulk-row-expandable { cursor: pointer; }
+.bulk-row-expandable:hover { background: var(--bg-alt); }
+.expand-arrow {
+  display: inline-block; font-size: 0.625rem; color: var(--muted);
+  transition: transform 0.15s; margin-left: 4px;
+}
+.bulk-row-open .expand-arrow { transform: rotate(90deg); }
+.bulk-detail-row td { padding: 0 10px 10px; background: var(--bg-alt); }
+.bulk-detail-row[hidden] { display: none; }
+.bulk-detail-cards { padding: 8px 0; }
+.bulk-detail-cards .ref-card { margin-bottom: 6px; }
+.bulk-detail-cards .ref-card:last-child { margin-bottom: 0; }
 
 /* Footer */
 footer { border-top: 1px solid var(--border); margin-top: 48px; }

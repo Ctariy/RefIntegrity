@@ -350,13 +350,52 @@ function renderBulkResults() {
   ].filter(Boolean).join('<span class="stat-sep">&middot;</span>');
 
   let html = `<table class="bulk-table"><thead><tr><th>DOI</th><th>Title</th><th>Refs</th><th>Status</th></tr></thead><tbody>`;
-  bulkResultsData.forEach((r) => {
+  bulkResultsData.forEach((r, idx) => {
     const cls = r.error ? "status-err" : r.flagged_count > 0 ? "status-warn" : "status-ok";
+    const hasFlagged = !r.error && r.flagged_count > 0 && r.flagged_references && r.flagged_references.length > 0;
     const txt = r.error || (r.flagged_count > 0 ? `${r.flagged_count} ${i18n.t("results.flagged")}` : i18n.t("results.clean"));
-    html += `<tr><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}</td></tr>`;
+    const expandAttr = hasFlagged ? ` class="bulk-row-expandable" data-bulk-idx="${idx}"` : "";
+    const arrow = hasFlagged ? ' <span class="expand-arrow">&#9656;</span>' : "";
+    html += `<tr${expandAttr}><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}${arrow}</td></tr>`;
+    if (hasFlagged) {
+      html += `<tr class="bulk-detail-row" id="bulk-detail-${idx}" hidden><td colspan="4"><div class="bulk-detail-cards">`;
+      r.flagged_references.forEach((ref) => {
+        const cfg = getStatusConfig(ref.status);
+        let title = ref.title || i18n.t("results.titleUnavailable");
+        title = title.replace(/^(RETRACTED|WITHDRAWN|REMOVED):\s*/i, "");
+        const shortDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : null;
+        const doiUrl = shortDoi ? `https://doi.org/${shortDoi}` : null;
+        const metaParts = [];
+        if (doiUrl) metaParts.push(`<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(shortDoi)}</a>`);
+        if (ref.publication_year) metaParts.push(`<span>${ref.publication_year}</span>`);
+        if (ref.notice_doi) {
+          const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
+          metaParts.push(`<a href="${u}" target="_blank" rel="noopener">retraction notice</a>`);
+        }
+        let reasonsHtml = "";
+        if (ref.reasons && ref.reasons.length > 0) {
+          reasonsHtml = `<div class="ref-reasons">${ref.reasons.map((reason) => `<span class="reason-tag">${escapeHtml(reason)}</span>`).join("")}</div>`;
+        }
+        html += `<div class="ref-card ${cfg.cardClass}"><span class="badge ${cfg.cssClass}">${cfg.label}</span><h3>${escapeHtml(title)}</h3><div class="ref-meta">${metaParts.join('<span class="meta-dot"> · </span>')}</div>${reasonsHtml}</div>`;
+      });
+      html += `</div></td></tr>`;
+    }
   });
   html += `</tbody></table>`;
   bulkTableWrapper.innerHTML = html;
+
+  // Expand/collapse click handler
+  bulkTableWrapper.addEventListener("click", function (e) {
+    var row = e.target.closest(".bulk-row-expandable");
+    if (!row) return;
+    var idx = row.dataset.bulkIdx;
+    var detail = document.getElementById("bulk-detail-" + idx);
+    if (detail) {
+      var isOpen = !detail.hidden;
+      detail.hidden = isOpen;
+      row.classList.toggle("bulk-row-open", !isOpen);
+    }
+  });
 }
 
 // --- Export ---
