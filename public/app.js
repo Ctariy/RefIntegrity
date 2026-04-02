@@ -571,9 +571,11 @@ if (bulkTextInput) {
   });
 
   bulkTextInput.addEventListener("paste", function (e) {
-    e.preventDefault();
-    var pasted = (e.clipboardData || window.clipboardData).getData("text");
-    if (pasted) { addBulkTags(pasted); bulkTextInput.value = ""; }
+    // Let the paste happen naturally, then process on next tick
+    setTimeout(function () {
+      var val = bulkTextInput.value.trim();
+      if (val) { addBulkTags(val); bulkTextInput.value = ""; }
+    }, 0);
   });
 }
 
