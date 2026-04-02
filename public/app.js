@@ -450,9 +450,17 @@ function generateCsv(data) {
 }
 
 function generateBulkCsv() {
-  const rows = [["DOI", "Title", "References", "Flagged", "Error"]];
+  const rows = [["Paper DOI", "Paper Title", "References", "Flagged", "Error", "Flagged DOI", "Flagged Title", "Status", "Year", "Retraction Date", "Notice DOI", "Reasons"]];
   bulkResultsData.forEach((r) => {
-    rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, r.error || ""]);
+    if (r.flagged_references && r.flagged_references.length > 0) {
+      r.flagged_references.forEach((ref) => {
+        const cfg = getStatusConfig(ref.status);
+        const refDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : "";
+        rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, "", refDoi, ref.title || "", cfg.label, ref.publication_year || "", ref.update_date || "", ref.notice_doi || "", (ref.reasons || []).join("; ")]);
+      });
+    } else {
+      rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, r.error || "", "", "", "", "", "", "", ""]);
+    }
   });
   return rows.map((r) => r.map((c) => csvSafe(c)).join(",")).join("\n");
 }
