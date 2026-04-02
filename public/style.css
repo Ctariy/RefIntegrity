@@ -453,45 +453,48 @@ main {
 .step p { font-size: 0.8125rem; color: var(--text-secondary); margin: 0; }
 .step strong { color: var(--text); }
 
-/* Collapsible info sections — collapse when user is active */
+/* Collapsible info sections — collapsed by default */
 .how-it-works .collapsible-body,
 .faq-section .collapsible-body {
   overflow: hidden;
-  max-height: 600px;
-  opacity: 1;
-  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
-}
-.how-it-works.collapsed .collapsible-body,
-.faq-section.collapsed .collapsible-body {
   max-height: 0;
   opacity: 0;
-  margin-top: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+.how-it-works.expanded .collapsible-body,
+.faq-section.expanded .collapsible-body {
+  max-height: 600px;
+  opacity: 1;
 }
 .how-it-works h2,
 .faq-section h2 {
-  transition: margin-bottom 0.3s ease;
-}
-.how-it-works.collapsed h2,
-.faq-section.collapsed h2 {
-  margin-bottom: 0;
   cursor: pointer;
   color: var(--text-secondary);
+  transition: color 0.15s ease;
 }
-.how-it-works.collapsed h2:hover,
-.faq-section.collapsed h2:hover {
+.how-it-works h2:hover,
+.faq-section h2:hover {
   color: var(--navy);
 }
-.how-it-works.collapsed h2::after,
-.faq-section.collapsed h2::after {
+.how-it-works h2::after,
+.faq-section h2::after {
   content: " +";
   font-weight: 400;
   font-size: 0.875rem;
   color: var(--muted);
 }
-.how-it-works.collapsed,
-.faq-section.collapsed {
-  margin-top: 24px;
-  padding-top: 16px;
+.how-it-works.expanded h2,
+.faq-section.expanded h2 {
+  color: var(--text);
+  cursor: default;
+  margin-bottom: 16px;
+}
+.faq-section.expanded h2 {
+  margin-bottom: 12px;
+}
+.how-it-works.expanded h2::after,
+.faq-section.expanded h2::after {
+  content: none;
 }
 
 /* FAQ (visible section) */

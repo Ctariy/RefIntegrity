@@ -31,16 +31,6 @@ const searchList = document.getElementById("search-list");
 let lastResult = null;
 let bulkResultsData = [];
 let currentController = null;
-var _infoCollapsed = false;
-
-function collapseInfoSections() {
-  if (_infoCollapsed) return;
-  _infoCollapsed = true;
-  var h = document.getElementById("how-section");
-  var f = document.getElementById("faq-section");
-  if (h) h.classList.add("collapsed");
-  if (f) f.classList.add("collapsed");
-}
 
 // --- DOI extraction ---
 
@@ -93,10 +83,7 @@ function showSection(section) {
     (s) => (s.hidden = true)
   );
   selfRetractedWarning.hidden = true;
-  if (section) {
-    section.hidden = false;
-    collapseInfoSections();
-  }
+  if (section) section.hidden = false;
 }
 
 function showError(msg) {
@@ -563,23 +550,14 @@ historyList.addEventListener("click", (e) => {
 renderHistory();
 
 // --- Collapsible info sections (How it works + FAQ) ---
+// Collapsed by default; click heading to toggle
 (function () {
-  var howSec = document.getElementById("how-section");
-  var faqSec = document.getElementById("faq-section");
-
-  // Collapse when user starts interacting
-  doiInput.addEventListener("focus", collapseInfoSections, { once: true });
-  bulkInput.addEventListener("focus", collapseInfoSections, { once: true });
-
-  // Toggle individual sections by clicking heading when collapsed
-  [howSec, faqSec].forEach(function (section) {
+  [document.getElementById("how-section"), document.getElementById("faq-section")].forEach(function (section) {
     if (!section) return;
     var heading = section.querySelector("h2");
     if (!heading) return;
     heading.addEventListener("click", function () {
-      if (section.classList.contains("collapsed")) {
-        section.classList.remove("collapsed");
-      }
+      section.classList.toggle("expanded");
     });
   });
 })();
