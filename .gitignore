@@ -2,6 +2,7 @@ node_modules/
 .env
 .netlify/
 netlify/functions/rw-reasons.json
+netlify/functions/rw-timestamp.txt
 .claude/
 test-results/
 *.stackdump

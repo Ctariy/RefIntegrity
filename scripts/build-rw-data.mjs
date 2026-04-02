@@ -55,6 +55,15 @@ async function main() {
 
   writeFileSync(OUTPUT, JSON.stringify(map));
 
+  // Save timestamp for the scheduled update checker
+  const gitlabRes = await fetch("https://gitlab.com/api/v4/projects/crossref%2Fretraction-watch-data/repository/commits?per_page=1");
+  if (gitlabRes.ok) {
+    const [commit] = await gitlabRes.json();
+    const tsPath = join(__dirname, "..", "netlify", "functions", "rw-timestamp.txt");
+    writeFileSync(tsPath, commit.committed_date);
+    console.log(`RW data commit: ${commit.committed_date}`);
+  }
+
   const sizeMB = (Buffer.byteLength(JSON.stringify(map)) / 1024 / 1024).toFixed(1);
   console.log(`Done: ${matched} entries with reasons, ${sizeMB} MB → ${OUTPUT}`);
 }
