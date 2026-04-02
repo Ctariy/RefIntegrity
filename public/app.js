@@ -650,6 +650,11 @@ function startEditTag(index) {
   input.value = oldValue;
   textEl.hidden = true;
   tag.insertBefore(input, textEl);
+  // Auto-size input to content
+  function sizeInput() { input.style.width = Math.max(8, input.value.length + 1) + "ch"; }
+  sizeInput();
+  input.addEventListener("input", sizeInput);
+
   input.focus();
   input.select();
 

@@ -256,7 +256,7 @@ main {
   transition: background 0.15s;
 }
 .doi-tag:hover .doi-tag-text { background: rgba(32, 84, 147, 0.08); }
-.doi-tag-editing { padding-right: 4px; }
+.doi-tag-editing { background: var(--bg); border-color: var(--navy); }
 .doi-tag-edit-input {
   border: none;
   outline: none;
@@ -264,8 +264,9 @@ main {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   color: var(--text);
-  width: 22ch;
   padding: 0;
+  field-sizing: content;
+  min-width: 8ch;
 }
 .doi-tag-remove:hover { color: var(--red); }
 .doi-tag-pulse {
