@@ -546,10 +546,13 @@ function renderSearchResults(results) {
   showSection(searchResultsSection);
   searchList.innerHTML = results.map((r) => {
     var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
+    var noDoi = !r.doi;
+    var disabledClass = noDoi ? " search-item-disabled" : "";
+    var noDoisHint = noDoi ? `<span class="search-no-doi">${i18n.t("search.noDoi")}</span>` : "";
     return `
-    <button class="search-item" data-doi="${escapeHtml(r.doi || "")}" type="button">
+    <button class="search-item${disabledClass}" data-doi="${escapeHtml(r.doi || "")}" type="button"${noDoi ? ' disabled' : ''}>
       <span class="search-title">${escapeHtml(r.title || i18n.t("results.titleUnavailable"))}${retractedBadge}</span>
-      <span class="search-meta">${escapeHtml(r.authors || "")}${r.year ? " (" + r.year + ")" : ""} &middot; ${r.refs} ${i18n.t("results.references")}${r.cited_by ? " &middot; " + i18n.t("search.citedBy", { count: r.cited_by }) : ""}</span>
+      <span class="search-meta">${escapeHtml(r.authors || "")}${r.year ? " (" + r.year + ")" : ""} &middot; ${r.refs} ${i18n.t("results.references")}${r.cited_by ? " &middot; " + i18n.t("search.citedBy", { count: r.cited_by }) : ""}${noDoisHint}</span>
     </button>`;
   }).join("");
 }

@@ -473,7 +473,9 @@ main {
   border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer;
   font-family: var(--font-sans); transition: border-color 0.15s, box-shadow 0.15s;
 }
-.search-item:hover { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.search-item:hover:not(:disabled) { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.search-item-disabled { opacity: 0.5; cursor: default; }
+.search-no-doi { color: var(--muted); font-style: italic; }
 .search-title { display: block; font-size: 0.9375rem; font-weight: 500; color: var(--navy); line-height: 1.4; }
 .search-meta { display: block; font-size: 0.8125rem; color: var(--muted); margin-top: 4px; }
 .badge-retracted {
