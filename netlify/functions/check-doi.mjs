@@ -1,4 +1,6 @@
-import { createRequire } from "module";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const OPENALEX_BASE = "https://api.openalex.org";
 const CROSSREF_BASE = "https://api.crossref.org";
@@ -9,8 +11,8 @@ const FLAGGED_TYPES = ["retraction", "expression-of-concern", "withdrawal", "rem
 // Retraction Watch reasons lookup (DOI → "Reason1;Reason2;...")
 let rwReasons = {};
 try {
-  const require = createRequire(import.meta.url);
-  rwReasons = require("./rw-reasons.json");
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  rwReasons = JSON.parse(readFileSync(resolve(__dirname, "rw-reasons.json"), "utf8"));
 } catch { /* function works without reasons */ }
 
 function corsHeaders() {
