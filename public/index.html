@@ -183,49 +183,52 @@
 
   <main>
     <div class="page-title">
-      <h1 data-i18n="hero.h1">Don't let retracted citations satisfice your paper</h1>
+      <h1 data-i18n="hero.h1">Don't let retracted citations undermine your paper</h1>
       <p class="answer-block" data-i18n="hero.subtitle">94% of citations to retracted papers go undetected. RefIntegrity scans your entire reference list in seconds against the Retraction Watch database. Paste a DOI or upload a BibTeX file — free, no login.</p>
     </div>
 
-    <!-- Primary input -->
-    <section class="search-box">
-      <div class="input-row">
+    <!-- Unified input (toggles between single and bulk mode) -->
+    <section class="search-box" id="search-box">
+      <div class="input-wrap" id="input-single">
         <input type="text" id="doi-input"
                placeholder="Paper title, DOI, PMID, or arXiv ID"
                data-i18n-placeholder="search.placeholder"
                aria-label="Enter DOI"
                autocomplete="off"
                spellcheck="false">
-        <button id="check-btn" type="button" data-goatcounter-click="check-single" data-i18n="search.checkBtn">Check</button>
+        <button id="check-btn" type="button" class="input-submit" data-goatcounter-click="check-single" aria-label="Check">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+      <div id="input-bulk" hidden>
+        <div class="tag-input" id="tag-input">
+          <div class="tag-list" id="tag-list"></div>
+          <input type="text" id="bulk-text-input"
+                 placeholder="DOI, PMID, or arXiv ID — press Enter to add"
+                 data-i18n-placeholder="search.bulkTagPlaceholder"
+                 aria-label="Add DOIs"
+                 autocomplete="off"
+                 spellcheck="false">
+          <span class="bulk-count" id="bulk-count" hidden></span>
+          <button id="bulk-check-btn" type="button" class="tag-submit" data-goatcounter-click="check-bulk" aria-label="Check">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+        <textarea id="bulk-input" hidden></textarea>
       </div>
       <div class="input-secondary">
-        <span class="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>
-        <span class="secondary-sep">&middot;</span>
-        <button type="button" class="link-btn" id="show-bulk" data-i18n="search.checkMultiple">Check multiple papers</button>
-        <span class="secondary-sep">&middot;</span>
-        <label class="link-btn file-label">
+        <span class="try-link" id="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>
+        <button type="button" class="link-btn" id="mode-toggle" data-i18n="search.switchBulk">Bulk mode</button>
+        <label class="link-btn file-label-inline" id="file-label">
           <span data-i18n="search.uploadBibRis">Upload .bib / .ris</span>
           <input type="file" id="file-input" accept=".bib,.ris,.txt,.enw" hidden>
         </label>
-      </div>
-    </section>
-
-    <!-- Bulk input (hidden by default) -->
-    <section id="bulk-section" class="search-box" hidden>
-      <textarea id="bulk-input" rows="5"
-                placeholder="Paste multiple DOIs (one per line) or BibTeX/RIS content"
-                data-i18n-placeholder="search.bulkPlaceholder"
-                aria-label="Enter multiple DOIs"
-                spellcheck="false"></textarea>
-      <div class="bulk-actions">
-        <button id="bulk-check-btn" type="button" data-goatcounter-click="check-bulk" data-i18n="search.checkAll">Check all</button>
         <span id="file-name" class="file-name" hidden></span>
       </div>
     </section>
 
     <!-- Recent -->
     <section id="history-section" class="history-section" hidden>
-      <span class="history-label" data-i18n="history.recent">Recent:</span>
       <div id="history-list" class="history-list"></div>
     </section>
 
@@ -253,17 +256,18 @@
 
     <!-- Single results -->
     <section id="results" hidden aria-live="polite">
-      <div id="result-hero"></div>
+      <button type="button" id="back-to-search" class="back-link" hidden>&larr; <span data-i18n="results.backToSearch">Back to search results</span></button>
       <div id="paper-title" class="result-title"></div>
-
-      <div id="export-actions" class="result-actions" hidden>
-        <button id="copy-btn" type="button" class="btn-text" data-i18n="results.copyResults">Copy results</button>
-        <span class="separator">|</span>
-        <button id="csv-btn" type="button" class="btn-text" data-i18n="results.downloadCsv">Download CSV</button>
-      </div>
-
+      <div id="result-hero"></div>
       <div id="flagged-list"></div>
-      <p id="result-disclaimer" class="result-disclaimer" hidden></p>
+      <div class="result-footer">
+        <p id="result-disclaimer" class="result-disclaimer" hidden></p>
+        <div id="export-actions" class="result-actions" hidden>
+          <button id="copy-btn" type="button" class="btn-text" data-i18n="results.copyResults">Copy</button>
+          <span class="separator">&middot;</span>
+          <button id="csv-btn" type="button" class="btn-text" data-i18n="results.downloadCsv">CSV</button>
+        </div>
+      </div>
     </section>
 
     <!-- Bulk results -->
@@ -276,29 +280,33 @@
       </div>
     </section>
 
-    <!-- How it works (visible on page) -->
-    <section class="how-it-works" id="how-section">
-      <h2 data-i18n="howSection.heading">How it works</h2>
-      <div class="steps-grid">
-        <div class="step">
-          <span class="step-num">1</span>
-          <p data-i18n-html="howItWorksPanel.step1"><strong>Enter a paper title or identifier</strong> &mdash; or upload a BibTeX/RIS file.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">2</span>
-          <p data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</p>
-        </div>
-        <div class="step">
-          <span class="step-num">3</span>
-          <p data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</p>
+    <!-- Info sections — collapsed by default, toggle on click -->
+    <section class="info-toggles" id="info-toggles">
+      <div class="info-toggle-section" id="how-section">
+        <button type="button" class="info-toggle-btn" data-i18n="howSection.heading">How it works</button>
+        <div class="info-toggle-body">
+          <div class="steps-grid">
+            <div class="step">
+              <span class="step-num">1</span>
+              <p data-i18n-html="howItWorksPanel.step1"><strong>Enter a paper title or identifier</strong> &mdash; or upload a BibTeX/RIS file.</p>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <p data-i18n-html="howItWorksPanel.step2"><strong>Automatic cross-check</strong> &mdash; all references checked against Retraction Watch via OpenAlex.</p>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <p data-i18n-html="howItWorksPanel.step3"><strong>Instant results</strong> &mdash; flagged refs shown with status, date, and retraction notice link.</p>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-
-    <!-- FAQ (visible on page) -->
-    <section class="faq-section" id="faq-section">
-      <h2>FAQ</h2>
-      <div class="faq-list" id="faq-list"></div>
+      <div class="info-toggle-section" id="faq-section">
+        <button type="button" class="info-toggle-btn">FAQ</button>
+        <div class="info-toggle-body">
+          <div class="faq-list" id="faq-list"></div>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -306,7 +314,7 @@
   <footer>
     <div class="footer-inner">
       <p>RefIntegrity is free, open-source software (<a href="https://github.com/Ctariy/RefIntegrity" target="_blank" rel="noopener">GitHub</a>). Data from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> and <a href="https://www.crossref.org" target="_blank" rel="noopener">Crossref</a>.</p>
-      <p>Useful? Support on <a href="https://ko-fi.com/ctariy" target="_blank" rel="noopener">Ko-fi</a> or <a href="https://github.com/sponsors/Ctariy" target="_blank" rel="noopener">GitHub Sponsors</a> &middot; <span class="last-updated">Updated <time datetime="2026-03-23">March 2026</time></span></p>
+      <p>Useful? Support on <a href="https://ko-fi.com/ctariy" target="_blank" rel="noopener">Ko-fi</a> or <a href="https://github.com/sponsors/Ctariy" target="_blank" rel="noopener">GitHub Sponsors</a> &middot; <span class="last-updated">Updated <time datetime="2026-04-02">April 2026</time></span></p>
     </div>
   </footer>
 

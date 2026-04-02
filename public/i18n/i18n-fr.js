@@ -10,7 +10,7 @@ i18n.addLang("fr", {
     },
     nav: { howItWorks: "Fonctionnement", api: "API", source: "Code source" },
     hero: {
-      h1: "V\u00e9rifiez si les r\u00e9f\u00e9rences d'un article ont \u00e9t\u00e9 r\u00e9tract\u00e9es",
+      h1: "Ne laissez pas les citations r\u00e9tract\u00e9es compromettre votre article",
       subtitle: "Saisissez un titre de l'article, DOI ou PMID pour v\u00e9rifier instantan\u00e9ment si les r\u00e9f\u00e9rences cit\u00e9es ont \u00e9t\u00e9 r\u00e9tract\u00e9es, retir\u00e9es ou font l'objet d'un avertissement. Gratuit, open source, sans inscription."
     },
     search: {
@@ -56,6 +56,7 @@ i18n.addLang("fr", {
       flagged: "signal\u00e9es",
       errorsLabel: "erreurs",
       disclaimer: "{total} r\u00e9f\u00e9rences v\u00e9rifi\u00e9es dans les registres de r\u00e9tractation de",
+      coverageNote: "{checked} r\u00e9f\u00e9rences v\u00e9rifi\u00e9es sur {total} ({pct}% de couverture). Certaines r\u00e9f\u00e9rences n'ont pas pu \u00eatre r\u00e9solues.",
       clean: "Conforme"
     },
     statuses: {
@@ -68,7 +69,7 @@ i18n.addLang("fr", {
       openSource: "RefIntegrity est un logiciel libre et open source ({github}). Donn\u00e9es fournies par {openalex} et {crossref}.",
       support: "Utile\u00a0? Soutenez le projet via {kofi} ou {sponsors}",
       updated: "Mis \u00e0 jour {date}",
-      monthYear: "mars 2026"
+      monthYear: "avril 2026"
     },
     noscript: "JavaScript est n\u00e9cessaire pour utiliser RefIntegrity.",
     howItWorksPanel: {

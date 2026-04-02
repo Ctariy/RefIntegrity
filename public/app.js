@@ -1,12 +1,14 @@
 // DOM
 const doiInput = document.getElementById("doi-input");
 const checkBtn = document.getElementById("check-btn");
-const showBulkBtn = document.getElementById("show-bulk");
-const bulkSection = document.getElementById("bulk-section");
+const inputSingle = document.getElementById("input-single");
+const inputBulk = document.getElementById("input-bulk");
 const bulkInput = document.getElementById("bulk-input");
 const bulkCheckBtn = document.getElementById("bulk-check-btn");
+const modeToggle = document.getElementById("mode-toggle");
 const fileInput = document.getElementById("file-input");
 const fileNameEl = document.getElementById("file-name");
+var isBulkMode = false;
 const loadingSection = document.getElementById("loading");
 const loadingText = document.getElementById("loading-text");
 const errorSection = document.getElementById("error");
@@ -31,6 +33,8 @@ const searchList = document.getElementById("search-list");
 let lastResult = null;
 let bulkResultsData = [];
 let currentController = null;
+var lastSearchResults = null;
+var lastSearchQuery = null;
 
 // --- DOI extraction ---
 
@@ -145,8 +149,15 @@ var HISTORY_COMPACT_COUNT = 3;
 
 function renderHistory() {
   const history = getHistory();
-  if (history.length === 0) { historySection.hidden = true; return; }
+  var tryLink = document.getElementById("try-link");
+  if (history.length === 0) {
+    historySection.hidden = true;
+    if (tryLink) tryLink.hidden = false;
+    return;
+  }
   historySection.hidden = false;
+  // Hide "Try" example when user already has history
+  if (tryLink) tryLink.hidden = true;
   var expanded = historySection.classList.contains("expanded");
   var visible = expanded ? history : history.slice(0, HISTORY_COMPACT_COUNT);
   var html = visible
@@ -196,23 +207,33 @@ async function checkSingle(doi, pmid) {
 function renderSingleResults(data) {
   showSection(resultsSection);
 
+  // Show "back to search" if we came from title search
+  var backBtn = document.getElementById("back-to-search");
+  if (backBtn) backBtn.hidden = !lastSearchResults;
+
   if (data.is_retracted) selfRetractedWarning.hidden = false;
 
-  // Hero — the main takeaway
-  const total = data.referenced_works_count;
-  const flagged = data.flagged_count;
-  const clean = total - flagged;
+  // Title first — the user wants to confirm they checked the right paper
+  if (data.title) {
+    paperTitle.innerHTML = `<h2>${escapeHtml(data.title)}</h2>`;
+  } else {
+    paperTitle.innerHTML = "";
+  }
 
-  if (flagged === 0 && total > 0) {
+  // Summary line — calm, informative
+  const total = data.referenced_works_count;
+  const checked = data.checked_count != null ? data.checked_count : total;
+  const flagged = data.flagged_count;
+
+  if (flagged === 0 && checked > 0) {
     resultHero.className = "result-hero result-hero-ok";
-    resultHero.innerHTML = `<strong>${i18n.t("results.allClear", { total })}</strong>`;
+    resultHero.innerHTML = `<strong>${i18n.t("results.allClear", { total: checked })}</strong>`;
   } else if (flagged > 0) {
     resultHero.className = "result-hero result-hero-warn";
     const key = flagged === 1 ? "results.flaggedCountSingular" : "results.flaggedCount";
-    resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total })}</strong>`;
+    resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total: checked })}</strong>`;
   } else {
     resultHero.className = "result-hero result-hero-neutral";
-    // Show arXiv-specific hint when no refs found for arXiv papers
     var msg = i18n.t("results.noIndexedRefs");
     if (data.doi && /^10\.48550\/arXiv\./i.test(data.doi)) {
       var hint = i18n.t("results.arxivNoRefsHint");
@@ -221,11 +242,11 @@ function renderSingleResults(data) {
     resultHero.innerHTML = msg;
   }
 
-  // Title
-  if (data.title) {
-    paperTitle.innerHTML = `<h2>${escapeHtml(data.title)}</h2>`;
-  } else {
-    paperTitle.innerHTML = "";
+  // Coverage note when not all references could be resolved
+  if (checked > 0 && total > checked) {
+    var pct = Math.round((checked / total) * 100);
+    var coverageHtml = `<div class="coverage-note">${i18n.t("results.coverageNote", { checked, total, pct })}</div>`;
+    resultHero.innerHTML += coverageHtml;
   }
 
   // Export
@@ -235,36 +256,35 @@ function renderSingleResults(data) {
   if (data.flagged_references && data.flagged_references.length > 0) {
     flaggedList.innerHTML = data.flagged_references.map((ref) => {
       const cfg = getStatusConfig(ref.status);
-      const doiUrl = ref.doi
-        ? ref.doi.startsWith("http") ? ref.doi : `https://doi.org/${ref.doi}`
-        : null;
+      // Clean DOI for display (strip URL prefix)
+      const shortDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : null;
+      const doiUrl = shortDoi ? `https://doi.org/${shortDoi}` : null;
 
-      let detailsHtml = "";
-      if (ref.update_date || ref.update_label || ref.notice_doi) {
-        const parts = [];
-        if (ref.update_date) parts.push(`<span>Date: ${escapeHtml(ref.update_date)}</span>`);
-        if (ref.update_label) parts.push(`<span>Type: ${escapeHtml(ref.update_label)}</span>`);
-        if (ref.notice_doi) {
-          const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
-          parts.push(`<span>Notice: <a href="${u}" target="_blank" rel="noopener">${escapeHtml(ref.notice_doi)}</a></span>`);
-        }
-        detailsHtml = `<div class="ref-detail">${parts.join("")}</div>`;
+      // Strip redundant "RETRACTED: " prefix since badge shows status
+      let title = ref.title || i18n.t("results.titleUnavailable");
+      title = title.replace(/^(RETRACTED|WITHDRAWN|REMOVED):\s*/i, "");
+
+      // Compact meta: DOI · year · notice link
+      const metaParts = [];
+      if (doiUrl) metaParts.push(`<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(shortDoi)}</a>`);
+      if (ref.publication_year) metaParts.push(`<span>${ref.publication_year}</span>`);
+      if (ref.notice_doi) {
+        const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
+        metaParts.push(`<a href="${u}" target="_blank" rel="noopener">retraction notice</a>`);
       }
 
+      // Reasons — collapsed by default if more than 2
       let reasonsHtml = "";
       if (ref.reasons && ref.reasons.length > 0) {
-        reasonsHtml = `<div class="ref-reasons">${ref.reasons.map((r) => `<span class="reason-tag">${escapeHtml(r)}</span>`).join("")}</div>`;
+        const tags = ref.reasons.map((r) => `<span class="reason-tag">${escapeHtml(r)}</span>`).join("");
+        reasonsHtml = `<details class="ref-reasons-details"><summary class="ref-reasons-toggle">Reasons (${ref.reasons.length})</summary><div class="ref-reasons">${tags}</div></details>`;
       }
 
       return `
       <div class="ref-card ${cfg.cardClass}">
         <span class="badge ${cfg.cssClass}">${cfg.label}</span>
-        <h3>${escapeHtml(ref.title || i18n.t("results.titleUnavailable"))}</h3>
-        <div class="ref-meta">
-          ${doiUrl ? `<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener"><code>${escapeHtml(ref.doi)}</code></a>` : ""}
-          ${ref.publication_year ? `<span>${ref.publication_year}</span>` : ""}
-        </div>
-        ${detailsHtml}
+        <h3>${escapeHtml(title)}</h3>
+        <div class="ref-meta">${metaParts.join('<span class="meta-dot"> · </span>')}</div>
         ${reasonsHtml}
       </div>`;
     }).join("");
@@ -274,9 +294,9 @@ function renderSingleResults(data) {
 
   // Disclaimer with coverage metric
   var disclaimer = document.getElementById("result-disclaimer");
-  if (disclaimer && total > 0) {
+  if (disclaimer && checked > 0) {
     disclaimer.hidden = false;
-    disclaimer.innerHTML = i18n.t("results.disclaimer", { total }) +
+    disclaimer.innerHTML = i18n.t("results.disclaimer", { total: checked }) +
       ' <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> &amp; <a href="https://www.crossref.org" target="_blank" rel="noopener">Crossref</a>.';
   } else if (disclaimer) {
     disclaimer.hidden = true;
@@ -328,21 +348,83 @@ function renderBulkResults() {
   const totalFlagged = bulkResultsData.reduce((s, r) => s + (r.flagged_count || 0), 0);
   const errors = bulkResultsData.filter((r) => r.error).length;
 
+  var cleanCount = bulkResultsData.filter((r) => !r.error && r.flagged_count === 0).length;
+  var flaggedPapers = bulkResultsData.filter((r) => r.flagged_count > 0).length;
+
   bulkSummary.innerHTML = [
-    `<span class="stat">${bulkResultsData.length} ${i18n.t("results.papers")}</span>`,
-    `<span class="stat">${totalRefs} ${i18n.t("results.references")}</span>`,
-    `<span class="stat flagged">${totalFlagged} ${i18n.t("results.flagged")}</span>`,
-    errors > 0 ? `<span class="stat">${errors} ${i18n.t("results.errorsLabel")}</span>` : "",
-  ].filter(Boolean).join('<span class="stat-sep">&middot;</span>');
+    `<button type="button" class="stat-filter active" data-filter="all">${bulkResultsData.length} ${i18n.t("results.papers")}</button>`,
+    cleanCount > 0 ? `<button type="button" class="stat-filter stat-filter-ok" data-filter="clean">${cleanCount} ${i18n.t("results.clean")}</button>` : "",
+    flaggedPapers > 0 ? `<button type="button" class="stat-filter stat-filter-warn" data-filter="flagged">${flaggedPapers} ${i18n.t("results.flagged")}</button>` : "",
+    errors > 0 ? `<button type="button" class="stat-filter stat-filter-err" data-filter="errors">${errors} ${i18n.t("results.errorsLabel")}</button>` : "",
+  ].filter(Boolean).join("");
 
   let html = `<table class="bulk-table"><thead><tr><th>DOI</th><th>Title</th><th>Refs</th><th>Status</th></tr></thead><tbody>`;
-  bulkResultsData.forEach((r) => {
+  bulkResultsData.forEach((r, idx) => {
     const cls = r.error ? "status-err" : r.flagged_count > 0 ? "status-warn" : "status-ok";
+    const hasFlagged = !r.error && r.flagged_count > 0 && r.flagged_references && r.flagged_references.length > 0;
     const txt = r.error || (r.flagged_count > 0 ? `${r.flagged_count} ${i18n.t("results.flagged")}` : i18n.t("results.clean"));
-    html += `<tr><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}</td></tr>`;
+    const rowType = r.error ? "errors" : r.flagged_count > 0 ? "flagged" : "clean";
+    const expandClass = hasFlagged ? " bulk-row-expandable" : "";
+    const expandData = hasFlagged ? ` data-bulk-idx="${idx}"` : "";
+    const arrow = hasFlagged ? ' <span class="expand-arrow">&#9656;</span>' : "";
+    html += `<tr class="bulk-data-row${expandClass}" data-row-type="${rowType}"${expandData}><td class="doi-cell">${escapeHtml(r.doi)}</td><td>${escapeHtml(r.title || "\u2014")}</td><td>${r.error ? "\u2014" : r.referenced_works_count}</td><td class="${cls}">${escapeHtml(txt)}${arrow}</td></tr>`;
+    if (hasFlagged) {
+      html += `<tr class="bulk-detail-row" data-row-type="flagged" id="bulk-detail-${idx}" hidden><td colspan="4"><div class="bulk-detail-cards">`;
+      r.flagged_references.forEach((ref) => {
+        const cfg = getStatusConfig(ref.status);
+        let title = ref.title || i18n.t("results.titleUnavailable");
+        title = title.replace(/^(RETRACTED|WITHDRAWN|REMOVED):\s*/i, "");
+        const shortDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : null;
+        const doiUrl = shortDoi ? `https://doi.org/${shortDoi}` : null;
+        const metaParts = [];
+        if (doiUrl) metaParts.push(`<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(shortDoi)}</a>`);
+        if (ref.publication_year) metaParts.push(`<span>${ref.publication_year}</span>`);
+        if (ref.notice_doi) {
+          const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
+          metaParts.push(`<a href="${u}" target="_blank" rel="noopener">retraction notice</a>`);
+        }
+        let reasonsHtml = "";
+        if (ref.reasons && ref.reasons.length > 0) {
+          reasonsHtml = `<div class="ref-reasons">${ref.reasons.map((reason) => `<span class="reason-tag">${escapeHtml(reason)}</span>`).join("")}</div>`;
+        }
+        html += `<div class="ref-card ${cfg.cardClass}"><span class="badge ${cfg.cssClass}">${cfg.label}</span><h3>${escapeHtml(title)}</h3><div class="ref-meta">${metaParts.join('<span class="meta-dot"> · </span>')}</div>${reasonsHtml}</div>`;
+      });
+      html += `</div></td></tr>`;
+    }
   });
   html += `</tbody></table>`;
   bulkTableWrapper.innerHTML = html;
+
+  // Expand/collapse click handler
+  bulkTableWrapper.addEventListener("click", function (e) {
+    var row = e.target.closest(".bulk-row-expandable");
+    if (!row) return;
+    var idx = row.dataset.bulkIdx;
+    var detail = document.getElementById("bulk-detail-" + idx);
+    if (detail) {
+      var isOpen = !detail.hidden;
+      detail.hidden = isOpen;
+      row.classList.toggle("bulk-row-open", !isOpen);
+    }
+  });
+
+  // Filter click handler
+  bulkSummary.addEventListener("click", function (e) {
+    var btn = e.target.closest(".stat-filter");
+    if (!btn) return;
+    var filter = btn.dataset.filter;
+    bulkSummary.querySelectorAll(".stat-filter").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    var rows = bulkTableWrapper.querySelectorAll("[data-row-type]");
+    rows.forEach(function (row) {
+      if (filter === "all" || row.dataset.rowType === filter) {
+        row.hidden = row.classList.contains("bulk-detail-row") && !row.classList.contains("bulk-detail-open");
+        if (row.classList.contains("bulk-data-row")) row.hidden = false;
+      } else {
+        row.hidden = true;
+      }
+    });
+  });
 }
 
 // --- Export ---
@@ -374,9 +456,17 @@ function generateCsv(data) {
 }
 
 function generateBulkCsv() {
-  const rows = [["DOI", "Title", "References", "Flagged", "Error"]];
+  const rows = [["Paper DOI", "Paper Title", "References", "Flagged", "Error", "Flagged DOI", "Flagged Title", "Status", "Year", "Retraction Date", "Notice DOI", "Reasons"]];
   bulkResultsData.forEach((r) => {
-    rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, r.error || ""]);
+    if (r.flagged_references && r.flagged_references.length > 0) {
+      r.flagged_references.forEach((ref) => {
+        const cfg = getStatusConfig(ref.status);
+        const refDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : "";
+        rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, "", refDoi, ref.title || "", cfg.label, ref.publication_year || "", ref.update_date || "", ref.notice_doi || "", (ref.reasons || []).join("; ")]);
+      });
+    } else {
+      rows.push([r.doi, r.title || "", r.referenced_works_count || 0, r.flagged_count || 0, r.error || "", "", "", "", "", "", "", ""]);
+    }
   });
   return rows.map((r) => r.map((c) => csvSafe(c)).join(",")).join("\n");
 }
@@ -402,6 +492,7 @@ function downloadCsv(csvContent, filename) {
 function handlePrimaryCheck() {
   const raw = doiInput.value.trim();
   if (!raw) { showError(i18n.t("errors.enterDoi")); return; }
+  lastSearchResults = null; // clear search context for direct checks
   // Try PMID first (PMID:12345678, pubmed URL, or bare digits after cleaning)
   const pmid = parsePmid(raw);
   if (pmid) { checkSingle(null, pmid); return; }
@@ -450,6 +541,8 @@ async function searchByTitle(query) {
 }
 
 function renderSearchResults(results) {
+  lastSearchResults = results;
+  if (doiInput.value.trim()) lastSearchQuery = doiInput.value.trim();
   showSection(searchResultsSection);
   searchList.innerHTML = results.map((r) => {
     var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
@@ -457,15 +550,20 @@ function renderSearchResults(results) {
     <button class="search-item" data-doi="${escapeHtml(r.doi || "")}" type="button">
       <span class="search-title">${escapeHtml(r.title || i18n.t("results.titleUnavailable"))}${retractedBadge}</span>
       <span class="search-meta">${escapeHtml(r.authors || "")}${r.year ? " (" + r.year + ")" : ""} &middot; ${r.refs} ${i18n.t("results.references")}${r.cited_by ? " &middot; " + i18n.t("search.citedBy", { count: r.cited_by }) : ""}</span>
+      <span class="search-no-doi-msg" hidden>${i18n.t("search.noDoi")}</span>
     </button>`;
   }).join("");
 }
 
 
 function handleBulkCheck() {
-  const text = bulkInput.value.trim();
-  if (!text) { showError(i18n.t("errors.pasteDois")); return; }
-  const dois = extractDois(text);
+  // Also grab anything typed but not yet added as a tag
+  if (bulkTextInput && bulkTextInput.value.trim()) {
+    addBulkTags(bulkTextInput.value);
+    bulkTextInput.value = "";
+  }
+  if (bulkTags.length === 0) { showError(i18n.t("errors.pasteDois")); return; }
+  const dois = bulkTags.slice();
   if (dois.length === 0) { showError(i18n.t("errors.noValidDois")); return; }
   if (dois.length === 1) { doiInput.value = dois[0]; checkSingle(dois[0]); return; }
   checkBulk(dois);
@@ -476,18 +574,185 @@ function handleBulkCheck() {
 checkBtn.addEventListener("click", handlePrimaryCheck);
 doiInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handlePrimaryCheck(); });
 
-showBulkBtn.addEventListener("click", () => {
-  bulkSection.hidden = !bulkSection.hidden;
-  if (!bulkSection.hidden) bulkInput.focus();
-});
+function setBulkMode(on) {
+  // Transfer content between inputs
+  if (on && !isBulkMode) {
+    var val = doiInput.value.trim();
+    if (val && bulkTags.length === 0) addBulkTags(val);
+  } else if (!on && isBulkMode) {
+    if (bulkTags.length === 1 && !doiInput.value.trim()) doiInput.value = bulkTags[0];
+  }
+  isBulkMode = on;
+  inputSingle.hidden = on;
+  inputBulk.hidden = !on;
+  modeToggle.textContent = i18n.t(on ? "search.switchSingle" : "search.switchBulk");
+  if (on && bulkTextInput) bulkTextInput.focus();
+  else doiInput.focus();
+}
 
+modeToggle.addEventListener("click", () => setBulkMode(!isBulkMode));
+
+// Back to search results
+document.getElementById("back-to-search").addEventListener("click", function () {
+  if (lastSearchResults) {
+    if (lastSearchQuery) doiInput.value = lastSearchQuery;
+    renderSearchResults(lastSearchResults);
+  }
+});
 bulkCheckBtn.addEventListener("click", handleBulkCheck);
+
+// --- Tag input for bulk mode ---
+var tagList = document.getElementById("tag-list");
+var bulkTextInput = document.getElementById("bulk-text-input");
+var tagInputWrap = document.getElementById("tag-input");
+var bulkCountEl = document.getElementById("bulk-count");
+var bulkTags = []; // array of DOI strings
+
+function syncTagsToTextarea() {
+  bulkInput.value = bulkTags.join("\n");
+  if (bulkCountEl) {
+    if (bulkTags.length > 0) {
+      bulkCountEl.hidden = false;
+      bulkCountEl.textContent = bulkTags.length + " DOI" + (bulkTags.length > 1 ? "s" : "");
+    } else {
+      bulkCountEl.hidden = true;
+    }
+  }
+}
+
+function addBulkTags(text) {
+  var dois = extractDois(text);
+  var added = 0;
+  dois.forEach(function (d) {
+    var existing = bulkTags.indexOf(d);
+    if (existing === -1) {
+      bulkTags.push(d);
+      added++;
+    } else {
+      // Highlight existing tag with pulse
+      var el = tagList.children[existing];
+      if (el) {
+        el.classList.remove("doi-tag-pulse");
+        void el.offsetWidth;
+        el.classList.add("doi-tag-pulse");
+        el.addEventListener("animationend", function () { el.classList.remove("doi-tag-pulse"); }, { once: true });
+      }
+    }
+  });
+  if (added > 0) renderBulkTags();
+}
+
+function removeBulkTag(index) {
+  bulkTags.splice(index, 1);
+  renderBulkTags();
+}
+
+function renderBulkTags() {
+  tagList.innerHTML = bulkTags.map(function (doi, i) {
+    return '<span class="doi-tag" data-idx="' + i + '">' +
+      '<span class="doi-tag-text">' + escapeHtml(doi) + '</span>' +
+      '<button type="button" class="doi-tag-remove" data-idx="' + i + '">&times;</button></span>';
+  }).join("");
+  syncTagsToTextarea();
+}
+
+function startEditTag(index) {
+  var tag = tagList.querySelector('.doi-tag[data-idx="' + index + '"]');
+  if (!tag || tag.classList.contains("doi-tag-editing")) return;
+  tag.classList.add("doi-tag-editing");
+  var textEl = tag.querySelector(".doi-tag-text");
+  var oldValue = bulkTags[index];
+  var input = document.createElement("input");
+  input.type = "text";
+  input.className = "doi-tag-edit-input";
+  input.value = oldValue;
+  textEl.hidden = true;
+  tag.insertBefore(input, textEl);
+  // Auto-size input to content
+  function sizeInput() { input.style.width = Math.max(8, input.value.length + 1) + "ch"; }
+  sizeInput();
+  input.addEventListener("input", sizeInput);
+
+  input.focus();
+  input.select();
+
+  function finishEdit() {
+    var newVal = input.value.trim();
+    if (newVal && newVal !== oldValue) {
+      // Check for duplicate
+      var dup = bulkTags.indexOf(newVal);
+      if (dup !== -1 && dup !== index) {
+        // Duplicate — pulse the existing one, revert this
+        var el = tagList.children[dup];
+        if (el) { el.classList.remove("doi-tag-pulse"); void el.offsetWidth; el.classList.add("doi-tag-pulse"); el.addEventListener("animationend", function () { el.classList.remove("doi-tag-pulse"); }, { once: true }); }
+        newVal = oldValue;
+      }
+      bulkTags[index] = newVal;
+    } else if (!newVal) {
+      // Empty — remove the tag
+      bulkTags.splice(index, 1);
+    }
+    renderBulkTags();
+  }
+
+  input.addEventListener("blur", finishEdit, { once: true });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+    if (e.key === "Escape") { input.value = oldValue; input.blur(); }
+  });
+}
+
+if (bulkTextInput) {
+  bulkTextInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      var val = bulkTextInput.value.trim();
+      if (val) { addBulkTags(val); bulkTextInput.value = ""; }
+    }
+    // Backspace on empty input removes last tag
+    if (e.key === "Backspace" && !bulkTextInput.value && bulkTags.length > 0) {
+      removeBulkTag(bulkTags.length - 1);
+    }
+  });
+
+  bulkTextInput.addEventListener("paste", function (e) {
+    // Let the paste happen naturally, then process on next tick
+    setTimeout(function () {
+      var val = bulkTextInput.value.trim();
+      if (val) { addBulkTags(val); bulkTextInput.value = ""; }
+    }, 0);
+  });
+}
+
+if (tagList) {
+  tagList.addEventListener("click", function (e) {
+    var btn = e.target.closest(".doi-tag-remove");
+    if (btn) { removeBulkTag(parseInt(btn.dataset.idx, 10)); return; }
+    var textEl = e.target.closest(".doi-tag-text");
+    if (textEl) {
+      var tag = textEl.closest(".doi-tag");
+      if (tag) startEditTag(parseInt(tag.dataset.idx, 10));
+    }
+  });
+}
+
+if (tagInputWrap) {
+  tagInputWrap.addEventListener("click", function (e) {
+    // Don't steal focus if clicking a tag or edit input
+    if (e.target.closest(".doi-tag")) return;
+    bulkTextInput.focus();
+  });
+}
 
 // Try link
 document.querySelectorAll("[data-doi]").forEach((btn) => {
   btn.addEventListener("click", () => {
-    doiInput.value = btn.dataset.doi;
-    handlePrimaryCheck();
+    if (isBulkMode) {
+      addBulkTags(btn.dataset.doi);
+    } else {
+      doiInput.value = btn.dataset.doi;
+      handlePrimaryCheck();
+    }
   });
 });
 
@@ -496,19 +761,26 @@ searchList.addEventListener("click", (e) => {
   var item = e.target.closest(".search-item");
   if (!item) return;
   var doi = item.dataset.doi;
-  if (doi) { doiInput.value = doi; checkSingle(doi); }
+  if (doi) {
+    doiInput.value = doi;
+    checkSingle(doi);
+  } else {
+    // No DOI — show inline message
+    var msg = item.querySelector(".search-no-doi-msg");
+    if (msg) msg.hidden = false;
+  }
 });
 
-// File upload
+// File upload — auto-switch to bulk mode, parse DOIs as tags
 fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 1024 * 1024) { showError(i18n.t("errors.fileTooLarge")); return; }
   fileNameEl.textContent = file.name;
   fileNameEl.hidden = false;
-  bulkSection.hidden = false;
+  setBulkMode(true);
   const reader = new FileReader();
-  reader.onload = (ev) => { bulkInput.value = ev.target.result; };
+  reader.onload = (ev) => { addBulkTags(ev.target.result); };
   reader.readAsText(file);
 });
 
@@ -532,8 +804,12 @@ bulkCsvBtn.addEventListener("click", () => {
 // History
 historyList.addEventListener("click", (e) => {
   if (e.target.classList.contains("history-item")) {
-    doiInput.value = e.target.dataset.doi;
-    handlePrimaryCheck();
+    if (isBulkMode) {
+      addBulkTags(e.target.dataset.doi);
+    } else {
+      doiInput.value = e.target.dataset.doi;
+      handlePrimaryCheck();
+    }
   }
   if (e.target.classList.contains("history-toggle")) {
     historySection.classList.toggle("expanded");
@@ -542,6 +818,13 @@ historyList.addEventListener("click", (e) => {
 });
 
 renderHistory();
+
+// --- Info toggle sections (How it works + FAQ) ---
+document.querySelectorAll(".info-toggle-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    btn.closest(".info-toggle-section").classList.toggle("expanded");
+  });
+});
 
 // --- Header panel toggles ---
 document.querySelectorAll(".nav-toggle").forEach((btn) => {

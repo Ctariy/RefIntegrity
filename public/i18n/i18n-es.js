@@ -10,7 +10,7 @@ i18n.addLang("es", {
     },
     nav: { howItWorks: "C\u00f3mo funciona", api: "API", source: "C\u00f3digo fuente" },
     hero: {
-      h1: "Verifica si tus referencias citan art\u00edculos retractados",
+      h1: "No dejes que las citas retractadas socaven tu art\u00edculo",
       subtitle: "Herramienta gratuita que comprueba autom\u00e1ticamente si las referencias de un art\u00edculo cient\u00edfico han sido retractadas, retiradas o tienen expresiones de preocupaci\u00f3n. Ingresa un t\u00edtulo del art\u00edculo, DOI o PMID y obt\u00e9n resultados en segundos."
     },
     search: {
@@ -57,6 +57,7 @@ i18n.addLang("es", {
       flagged: "con alertas",
       errorsLabel: "errores",
       disclaimer: "Se verificaron {total} referencias contra los registros de retracci\u00f3n de",
+      coverageNote: "Se verificaron {checked} de {total} referencias ({pct}% de cobertura). Algunas referencias no pudieron resolverse.",
       clean: "Sin problemas"
     },
     statuses: {
@@ -69,7 +70,7 @@ i18n.addLang("es", {
       openSource: "RefIntegrity es software libre y de c\u00f3digo abierto ({github}). Datos de {openalex} y {crossref}.",
       support: "\u00bfTe resulta \u00fatil? Apoya el proyecto en {kofi} o {sponsors}",
       updated: "Actualizado {date}",
-      monthYear: "marzo de 2026"
+      monthYear: "abril de 2026"
     },
     noscript: "RefIntegrity requiere JavaScript para funcionar.",
     howItWorksPanel: {

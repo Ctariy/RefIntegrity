@@ -177,13 +177,17 @@ export default async (req, context) => {
       }
     }
 
+    // Total reference count from metadata (may be higher than resolved refs)
+    const metadataRefCount = work.referenced_works_count || 0;
+
     if (refs.length === 0) {
       return jsonResponse({
         doi: resolvedDoi,
         pmid: pmid || undefined,
         title: work.title,
         is_retracted: work.is_retracted || false,
-        referenced_works_count: 0,
+        referenced_works_count: metadataRefCount,
+        checked_count: 0,
         flagged_references: [],
         flagged_count: 0,
       });
@@ -239,7 +243,8 @@ export default async (req, context) => {
       pmid: pmid || undefined,
       title: work.title,
       is_retracted: work.is_retracted || false,
-      referenced_works_count: refs.length,
+      referenced_works_count: metadataRefCount > refs.length ? metadataRefCount : refs.length,
+      checked_count: refs.length,
       flagged_references: enriched,
       flagged_count: enriched.length,
     });
