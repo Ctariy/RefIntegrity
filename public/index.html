@@ -200,7 +200,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
       </div>
-      <div class="input-wrap input-wrap-bulk" id="input-bulk" hidden>
+      <div id="input-bulk" hidden>
         <div class="tag-input" id="tag-input">
           <div class="tag-list" id="tag-list"></div>
           <input type="text" id="bulk-text-input"
@@ -209,12 +209,12 @@
                  aria-label="Add DOIs"
                  autocomplete="off"
                  spellcheck="false">
+          <span class="bulk-count" id="bulk-count" hidden></span>
+          <button id="bulk-check-btn" type="button" class="tag-submit" data-goatcounter-click="check-bulk" aria-label="Check">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
         </div>
         <textarea id="bulk-input" hidden></textarea>
-        <button id="bulk-check-btn" type="button" class="input-submit input-submit-bulk" data-goatcounter-click="check-bulk" aria-label="Check">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
-        <span class="bulk-count" id="bulk-count" hidden></span>
       </div>
       <div class="input-secondary">
         <span class="try-link" id="try-link"><span data-i18n="search.tryLabel">Try:</span> <button type="button" class="link-btn" data-doi="10.1038/s41577-020-0311-8">10.1038/s41577-020-0311-8</button></span>

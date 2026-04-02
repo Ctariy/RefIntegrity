@@ -193,10 +193,11 @@ main {
 .input-submit:disabled { opacity: 0.4; cursor: default; }
 
 /* Bulk tag input */
+#input-bulk[hidden] { display: none; }
 .tag-input {
   width: 100%;
   min-height: 48px;
-  padding: 8px 48px 8px 10px;
+  padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg);
@@ -248,15 +249,24 @@ main {
   padding: 4px 0;
 }
 .tag-input input::placeholder { color: #9aa0a6; }
-.input-wrap-bulk .input-submit-bulk {
-  top: auto;
-  bottom: 10px;
-  transform: none;
+.tag-submit {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.tag-submit:hover { background: var(--navy-dark); }
+.tag-submit:disabled { opacity: 0.4; cursor: default; }
 .bulk-count {
-  position: absolute;
-  right: 48px;
-  bottom: 14px;
+  flex-shrink: 0;
   font-size: 0.6875rem;
   color: var(--muted);
 }
