@@ -663,9 +663,12 @@ if (tagInputWrap) {
 // Try link
 document.querySelectorAll("[data-doi]").forEach((btn) => {
   btn.addEventListener("click", () => {
-    if (isBulkMode) setBulkMode(false);
-    doiInput.value = btn.dataset.doi;
-    handlePrimaryCheck();
+    if (isBulkMode) {
+      addBulkTags(btn.dataset.doi);
+    } else {
+      doiInput.value = btn.dataset.doi;
+      handlePrimaryCheck();
+    }
   });
 });
 
@@ -710,9 +713,12 @@ bulkCsvBtn.addEventListener("click", () => {
 // History
 historyList.addEventListener("click", (e) => {
   if (e.target.classList.contains("history-item")) {
-    if (isBulkMode) setBulkMode(false);
-    doiInput.value = e.target.dataset.doi;
-    handlePrimaryCheck();
+    if (isBulkMode) {
+      addBulkTags(e.target.dataset.doi);
+    } else {
+      doiInput.value = e.target.dataset.doi;
+      handlePrimaryCheck();
+    }
   }
   if (e.target.classList.contains("history-toggle")) {
     historySection.classList.toggle("expanded");
