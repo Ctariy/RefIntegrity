@@ -10,7 +10,7 @@ i18n.addLang("pt", {
     },
     nav: { howItWorks: "Como funciona", api: "API", source: "C\u00f3digo-fonte" },
     hero: {
-      h1: "Verifique se as refer\u00eancias do seu artigo foram retratadas",
+      h1: "N\u00e3o deixe que cita\u00e7\u00f5es retratadas comprometam seu artigo",
       subtitle: "Insira um t\u00edtulo do artigo, DOI ou PMID e descubra instantaneamente se alguma refer\u00eancia citada foi retratada, recebeu express\u00e3o de preocupa\u00e7\u00e3o ou foi removida. Gratuito, sem cadastro."
     },
     search: {
@@ -56,6 +56,7 @@ i18n.addLang("pt", {
       flagged: "sinalizadas",
       errorsLabel: "erros",
       disclaimer: "{total} refer\u00eancias verificadas nos registros de retra\u00e7\u00e3o de",
+      coverageNote: "Verificadas {checked} de {total} refer\u00eancias ({pct}% de cobertura). Algumas refer\u00eancias n\u00e3o puderam ser resolvidas.",
       clean: "Sem problemas"
     },
     statuses: {
@@ -68,7 +69,7 @@ i18n.addLang("pt", {
       openSource: "RefIntegrity \u00e9 um software livre e de c\u00f3digo aberto ({github}). Dados de {openalex} e {crossref}.",
       support: "\u00datil? Apoie o projeto no {kofi} ou {sponsors}",
       updated: "Atualizado {date}",
-      monthYear: "mar\u00e7o de 2026"
+      monthYear: "abril de 2026"
     },
     noscript: "O RefIntegrity requer JavaScript para funcionar.",
     howItWorksPanel: {

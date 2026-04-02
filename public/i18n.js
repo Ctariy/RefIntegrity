@@ -30,7 +30,7 @@
     },
     nav: { howItWorks: "How it works", api: "API", source: "Source" },
     hero: {
-      h1: "Don\u2019t let retracted citations satisfice your paper",
+      h1: "Don\u2019t let retracted citations undermine your paper",
       subtitle: "94% of citations to retracted papers go undetected. RefIntegrity scans your entire reference list in seconds against the Retraction Watch database. Paste a DOI or upload a BibTeX file \u2014 free, no login."
     },
     howSection: { heading: "How it works" },
@@ -68,14 +68,15 @@
       copiedToClipboard: "Copied to clipboard",
       papers: "papers", references: "references", flagged: "flagged",
       errorsLabel: "errors", clean: "Clean",
-      disclaimer: "Checked {total} references against retraction records from"
+      disclaimer: "Checked {total} references against retraction records from",
+      coverageNote: "Checked {checked} of {total} references ({pct}% coverage). Some references could not be resolved."
     },
     statuses: { retracted: "Retracted", expressionOfConcern: "Expression of Concern", withdrawn: "Withdrawn", removed: "Removed" },
     footer: {
       openSource: "RefIntegrity is free, open-source software ({github}). Data from {openalex} and {crossref}.",
       support: "Support on {kofi} or {sponsors}",
       updated: "Updated {date}",
-      monthYear: "March 2026"
+      monthYear: "April 2026"
     },
     noscript: "RefIntegrity requires JavaScript to run. Please enable it in your browser.",
     howItWorksPanel: {
@@ -168,7 +169,7 @@
       var os = t("footer.openSource", footerLinks);
       var su = t("footer.support", footerLinks);
       var mo = t("footer.monthYear");
-      var dateHtml = '<time datetime="2026-03-23">' + (mo !== "footer.monthYear" ? mo : "March 2026") + '</time>';
+      var dateHtml = '<time datetime="2026-04-02">' + (mo !== "footer.monthYear" ? mo : "March 2026") + '</time>';
       var up = t("footer.updated", { date: dateHtml });
       if (os !== "footer.openSource") {
         fp.innerHTML = '<p>' + os + '</p>' +

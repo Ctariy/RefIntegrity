@@ -10,7 +10,7 @@ i18n.addLang("it", {
     },
     nav: { howItWorks: "Come funziona", api: "API", source: "Codice sorgente" },
     hero: {
-      h1: "Verifica i riferimenti ritrattati nei tuoi articoli scientifici",
+      h1: "Non lasciare che le citazioni ritrattate compromettano il tuo articolo",
       subtitle: "Inserisci un titolo dell'articolo, DOI o PMID per controllare istantaneamente se i riferimenti bibliografici sono stati ritrattati, ritirati o segnalati con espressione di preoccupazione."
     },
     search: {
@@ -56,6 +56,7 @@ i18n.addLang("it", {
       flagged: "segnalati",
       errorsLabel: "errori",
       disclaimer: "{total} riferimenti verificati nei registri di ritrattazione di",
+      coverageNote: "Verificati {checked} di {total} riferimenti ({pct}% di copertura). Alcuni riferimenti non sono stati risolti.",
       clean: "Integro"
     },
     statuses: {
@@ -68,7 +69,7 @@ i18n.addLang("it", {
       openSource: "RefIntegrity \u00e8 un software libero e open source ({github}). Dati da {openalex} e {crossref}.",
       support: "Ti \u00e8 utile? Sostieni il progetto su {kofi} o {sponsors}",
       updated: "Aggiornato {date}",
-      monthYear: "marzo 2026"
+      monthYear: "aprile 2026"
     },
     noscript: "Per utilizzare RefIntegrity \u00e8 necessario abilitare JavaScript.",
     howItWorksPanel: {

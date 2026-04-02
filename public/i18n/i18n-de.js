@@ -2,7 +2,7 @@
 i18n.addLang("de", {
     lang: "de", langName: "Deutsch", dir: "ltr",
     meta: {
-      title: "RefIntegrity \u2014 Referenzen auf Retraktionen pr\u00fcfen | Kostenlos",
+      title: "RefIntegrity \u2014 Lassen Sie nicht zu, dass zur\u00fcckgezogene Zitate Ihre Arbeit untergraben | Kostenlos",
       description: "Pr\u00fcfen Sie mit RefIntegrity, ob die Referenzen Ihrer wissenschaftlichen Publikation zur\u00fcckgezogen wurden. Kostenlos, schnell und zuverl\u00e4ssig \u2014 basierend auf OpenAlex und Crossref.",
       ogTitle: "RefIntegrity \u2014 Zur\u00fcckgezogene Referenzen in Fachartikeln erkennen",
       ogDescription: "Kostenloses Tool zur \u00dcberpr\u00fcfung wissenschaftlicher Literaturverzeichnisse auf Retraktionen.",
@@ -10,7 +10,7 @@ i18n.addLang("de", {
     },
     nav: { howItWorks: "So funktioniert's", api: "API", source: "Quellcode" },
     hero: {
-      h1: "Referenzen auf Retraktionen pr\u00fcfen",
+      h1: "Lassen Sie nicht zu, dass zur\u00fcckgezogene Zitate Ihre Arbeit untergraben",
       subtitle: "Geben Sie einen Titel, DOI oder PMID ein und pr\u00fcfen Sie in Sekunden, ob zitierte Arbeiten zur\u00fcckgezogen wurden. Kostenlos, ohne Registrierung."
     },
     search: {
@@ -56,6 +56,7 @@ i18n.addLang("de", {
       flagged: "markiert",
       errorsLabel: "Fehler",
       disclaimer: "{total} Referenzen gegen Retraktionsdaten gepr\u00fcft von",
+      coverageNote: "{checked} von {total} Referenzen \u00fcberpr\u00fcft ({pct}% Abdeckung). Einige Referenzen konnten nicht aufgel\u00f6st werden.",
       clean: "Unbedenklich"
     },
     statuses: {
@@ -68,7 +69,7 @@ i18n.addLang("de", {
       openSource: "RefIntegrity ist freie Open-Source-Software ({github}). Daten von {openalex} und {crossref}.",
       support: "N\u00fctzlich? Unterst\u00fctzen Sie das Projekt \u00fcber {kofi} oder {sponsors}",
       updated: "Aktualisiert {date}",
-      monthYear: "M\u00e4rz 2026"
+      monthYear: "April 2026"
     },
     noscript: "F\u00fcr RefIntegrity muss JavaScript aktiviert sein.",
     howItWorksPanel: {

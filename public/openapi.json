@@ -52,6 +52,7 @@
                       "title": "The trinity of COVID-19: immunity, inflammation and intervention",
                       "is_retracted": false,
                       "referenced_works_count": 138,
+                      "checked_count": 132,
                       "flagged_count": 1,
                       "flagged_references": [
                         {
@@ -75,6 +76,7 @@
                       "title": "Structure of the SARS-CoV-2 spike receptor-binding domain bound to the ACE2 receptor",
                       "is_retracted": false,
                       "referenced_works_count": 50,
+                      "checked_count": 50,
                       "flagged_count": 0,
                       "flagged_references": []
                     }
@@ -164,7 +166,11 @@
           },
           "referenced_works_count": {
             "type": "integer",
-            "description": "Total number of references checked"
+            "description": "Total number of references listed in the paper's metadata"
+          },
+          "checked_count": {
+            "type": "integer",
+            "description": "Number of references actually resolved and checked. May be less than referenced_works_count if some references could not be resolved in OpenAlex."
           },
           "flagged_count": {
             "type": "integer",

@@ -200,25 +200,31 @@ function renderSingleResults(data) {
 
   // Hero — the main takeaway
   const total = data.referenced_works_count;
+  const checked = data.checked_count != null ? data.checked_count : total;
   const flagged = data.flagged_count;
-  const clean = total - flagged;
 
-  if (flagged === 0 && total > 0) {
+  if (flagged === 0 && checked > 0) {
     resultHero.className = "result-hero result-hero-ok";
-    resultHero.innerHTML = `<strong>${i18n.t("results.allClear", { total })}</strong>`;
+    resultHero.innerHTML = `<strong>${i18n.t("results.allClear", { total: checked })}</strong>`;
   } else if (flagged > 0) {
     resultHero.className = "result-hero result-hero-warn";
     const key = flagged === 1 ? "results.flaggedCountSingular" : "results.flaggedCount";
-    resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total })}</strong>`;
+    resultHero.innerHTML = `<strong>${i18n.t(key, { flagged, total: checked })}</strong>`;
   } else {
     resultHero.className = "result-hero result-hero-neutral";
-    // Show arXiv-specific hint when no refs found for arXiv papers
     var msg = i18n.t("results.noIndexedRefs");
     if (data.doi && /^10\.48550\/arXiv\./i.test(data.doi)) {
       var hint = i18n.t("results.arxivNoRefsHint");
       if (hint !== "results.arxivNoRefsHint") msg += " " + hint;
     }
     resultHero.innerHTML = msg;
+  }
+
+  // Coverage note when not all references could be resolved
+  if (checked > 0 && total > checked) {
+    var pct = Math.round((checked / total) * 100);
+    var coverageHtml = `<div class="coverage-note">${i18n.t("results.coverageNote", { checked, total, pct })}</div>`;
+    resultHero.innerHTML += coverageHtml;
   }
 
   // Title
@@ -274,9 +280,9 @@ function renderSingleResults(data) {
 
   // Disclaimer with coverage metric
   var disclaimer = document.getElementById("result-disclaimer");
-  if (disclaimer && total > 0) {
+  if (disclaimer && checked > 0) {
     disclaimer.hidden = false;
-    disclaimer.innerHTML = i18n.t("results.disclaimer", { total }) +
+    disclaimer.innerHTML = i18n.t("results.disclaimer", { total: checked }) +
       ' <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a> &amp; <a href="https://www.crossref.org" target="_blank" rel="noopener">Crossref</a>.';
   } else if (disclaimer) {
     disclaimer.hidden = true;

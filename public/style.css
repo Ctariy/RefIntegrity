@@ -339,6 +339,12 @@ main {
   border: 1px solid var(--border);
   color: var(--text-secondary);
 }
+.coverage-note {
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
 
 /* Results */
 .result-title { margin-bottom: 12px; }
