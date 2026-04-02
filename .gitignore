@@ -1,6 +1,7 @@
 node_modules/
 .env
 .netlify/
+netlify/functions/rw-reasons.json
 .claude/
 test-results/
 *.stackdump

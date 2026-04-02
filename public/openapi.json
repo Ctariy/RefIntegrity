@@ -62,7 +62,8 @@
                           "status": "retraction",
                           "update_date": "2020-06-05",
                           "update_label": "Retraction",
-                          "notice_doi": "10.1016/s0140-6736(20)31324-6"
+                          "notice_doi": "10.1016/s0140-6736(20)31324-6",
+                          "reasons": ["Concerns/Issues About Data", "Error in Data", "Investigation by Journal/Publisher"]
                         }
                       ]
                     }
@@ -218,6 +219,12 @@
             "type": "string",
             "nullable": true,
             "description": "DOI of the retraction/concern notice"
+          },
+          "reasons": {
+            "type": "array",
+            "nullable": true,
+            "items": { "type": "string" },
+            "description": "Retraction reasons from Retraction Watch database (e.g. 'Error in Data', 'Plagiarism')"
           }
         }
       },

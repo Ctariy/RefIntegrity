@@ -4,7 +4,9 @@
   "description": "Check if a paper's references have been retracted",
   "scripts": {
     "dev": "netlify dev",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "build:rw-data": "node scripts/build-rw-data.mjs",
+    "build": "node scripts/build-rw-data.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",

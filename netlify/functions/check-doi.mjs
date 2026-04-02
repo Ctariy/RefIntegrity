@@ -1,8 +1,17 @@
+import { createRequire } from "module";
+
 const OPENALEX_BASE = "https://api.openalex.org";
 const CROSSREF_BASE = "https://api.crossref.org";
 const BATCH_SIZE = 50;
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || "refintegrity@example.com";
 const FLAGGED_TYPES = ["retraction", "expression-of-concern", "withdrawal", "removal"];
+
+// Retraction Watch reasons lookup (DOI → "Reason1;Reason2;...")
+let rwReasons = {};
+try {
+  const require = createRequire(import.meta.url);
+  rwReasons = require("./rw-reasons.json");
+} catch { /* function works without reasons */ }
 
 function corsHeaders() {
   return {
@@ -203,6 +212,12 @@ export default async (req, context) => {
         if (rawDoi) {
           crossref = await fetchCrossrefDetails(rawDoi);
         }
+        // Look up retraction reasons from Retraction Watch data
+        const reasonStr = rawDoi ? rwReasons[rawDoi.toLowerCase()] || null : null;
+        const reasons = reasonStr
+          ? reasonStr.split(";").map((r) => r.trim()).filter(Boolean)
+          : null;
+
         return {
           openalex_id: r.id,
           doi: r.doi,
@@ -212,6 +227,7 @@ export default async (req, context) => {
           update_date: crossref?.update_date || null,
           update_label: crossref?.update_label || null,
           notice_doi: crossref?.notice_doi || null,
+          reasons,
         };
       })
     );

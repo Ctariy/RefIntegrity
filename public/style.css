@@ -425,6 +425,12 @@ main {
 }
 .ref-detail span { display: block; margin-bottom: 1px; }
 .ref-detail a { color: var(--navy); }
+.ref-reasons { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.reason-tag {
+  display: inline-block; padding: 2px 8px; font-size: 0.6875rem;
+  background: var(--bg-alt); border: 1px solid var(--border); border-radius: 3px;
+  color: var(--text-secondary); line-height: 1.4;
+}
 
 /* Bulk results */
 .section-heading { font-family: var(--font-serif); font-size: 1.125rem; font-weight: 600; margin-bottom: 12px; }

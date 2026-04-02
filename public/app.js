@@ -251,6 +251,11 @@ function renderSingleResults(data) {
         detailsHtml = `<div class="ref-detail">${parts.join("")}</div>`;
       }
 
+      let reasonsHtml = "";
+      if (ref.reasons && ref.reasons.length > 0) {
+        reasonsHtml = `<div class="ref-reasons">${ref.reasons.map((r) => `<span class="reason-tag">${escapeHtml(r)}</span>`).join("")}</div>`;
+      }
+
       return `
       <div class="ref-card ${cfg.cardClass}">
         <span class="badge ${cfg.cssClass}">${cfg.label}</span>
@@ -260,6 +265,7 @@ function renderSingleResults(data) {
           ${ref.publication_year ? `<span>${ref.publication_year}</span>` : ""}
         </div>
         ${detailsHtml}
+        ${reasonsHtml}
       </div>`;
     }).join("");
   } else {
@@ -350,6 +356,7 @@ function formatResultsText(data) {
       text += `${i + 1}. [${cfg.label}] ${ref.title || i18n.t("results.titleUnavailable")}\n`;
       if (ref.doi) text += `   DOI: ${ref.doi}\n`;
       if (ref.update_date) text += `   Date: ${ref.update_date}\n`;
+      if (ref.reasons && ref.reasons.length) text += `   Reasons: ${ref.reasons.join("; ")}\n`;
     });
   } else {
     text += `${i18n.t("results.clean")}.\n`;
@@ -358,10 +365,10 @@ function formatResultsText(data) {
 }
 
 function generateCsv(data) {
-  const rows = [["Title", "DOI", "Year", "Status", "Date", "Type", "Notice DOI"]];
+  const rows = [["Title", "DOI", "Year", "Status", "Date", "Type", "Notice DOI", "Reasons"]];
   (data.flagged_references || []).forEach((ref) => {
     const cfg = getStatusConfig(ref.status);
-    rows.push([ref.title || "", ref.doi || "", ref.publication_year || "", cfg.label, ref.update_date || "", ref.update_label || "", ref.notice_doi || ""]);
+    rows.push([ref.title || "", ref.doi || "", ref.publication_year || "", cfg.label, ref.update_date || "", ref.update_label || "", ref.notice_doi || "", (ref.reasons || []).join("; ")]);
   });
   return rows.map((r) => r.map((c) => csvSafe(c)).join(",")).join("\n");
 }
