@@ -42,7 +42,7 @@
       checkAll: "Check all",
       switchBulk: "Bulk mode",
       switchSingle: "Single mode",
-      bulkTagPlaceholder: "Paste or type DOIs, press Enter to add",
+      bulkTagPlaceholder: "DOI, PMID, or arXiv ID — press Enter to add",
       selectPaper: "Select the paper you want to check:",
       citedBy: "cited by {count}"
     },
