@@ -43,6 +43,7 @@
       switchBulk: "Bulk mode",
       switchSingle: "Single mode",
       bulkTagPlaceholder: "DOI, PMID, or arXiv ID — press Enter to add",
+      noDoi: "This paper has no DOI \u2014 references cannot be checked.",
       selectPaper: "Select the paper you want to check:",
       citedBy: "cited by {count}"
     },

@@ -544,17 +544,13 @@ function renderSearchResults(results) {
   lastSearchResults = results;
   if (doiInput.value.trim()) lastSearchQuery = doiInput.value.trim();
   showSection(searchResultsSection);
-  var withDoi = results.filter((r) => r.doi);
-  if (withDoi.length === 0) {
-    searchList.innerHTML = `<p class="search-empty">${i18n.t("errors.noSearchResults")}</p>`;
-    return;
-  }
-  searchList.innerHTML = withDoi.map((r) => {
+  searchList.innerHTML = results.map((r) => {
     var retractedBadge = r.is_retracted ? ` <span class="badge badge-retracted">${i18n.t("statuses.retracted")}</span>` : "";
     return `
-    <button class="search-item" data-doi="${escapeHtml(r.doi)}" type="button">
+    <button class="search-item" data-doi="${escapeHtml(r.doi || "")}" type="button">
       <span class="search-title">${escapeHtml(r.title || i18n.t("results.titleUnavailable"))}${retractedBadge}</span>
       <span class="search-meta">${escapeHtml(r.authors || "")}${r.year ? " (" + r.year + ")" : ""} &middot; ${r.refs} ${i18n.t("results.references")}${r.cited_by ? " &middot; " + i18n.t("search.citedBy", { count: r.cited_by }) : ""}</span>
+      <span class="search-no-doi-msg" hidden>${i18n.t("search.noDoi")}</span>
     </button>`;
   }).join("");
 }
@@ -765,7 +761,14 @@ searchList.addEventListener("click", (e) => {
   var item = e.target.closest(".search-item");
   if (!item) return;
   var doi = item.dataset.doi;
-  if (doi) { doiInput.value = doi; checkSingle(doi); }
+  if (doi) {
+    doiInput.value = doi;
+    checkSingle(doi);
+  } else {
+    // No DOI — show inline message
+    var msg = item.querySelector(".search-no-doi-msg");
+    if (msg) msg.hidden = false;
+  }
 });
 
 // File upload — auto-switch to bulk mode, parse DOIs as tags

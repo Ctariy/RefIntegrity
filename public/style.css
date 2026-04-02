@@ -474,7 +474,11 @@ main {
   font-family: var(--font-sans); transition: border-color 0.15s, box-shadow 0.15s;
 }
 .search-item:hover { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.search-empty { font-size: 0.875rem; color: var(--muted); }
+.search-no-doi-msg {
+  display: block; margin-top: 6px; font-size: 0.75rem; color: var(--amber);
+  padding: 4px 8px; background: var(--amber-bg); border-radius: 3px;
+}
+.search-no-doi-msg[hidden] { display: none; }
 .search-title { display: block; font-size: 0.9375rem; font-weight: 500; color: var(--navy); line-height: 1.4; }
 .search-meta { display: block; font-size: 0.8125rem; color: var(--muted); margin-top: 4px; }
 .badge-retracted {
