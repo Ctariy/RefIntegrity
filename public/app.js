@@ -611,12 +611,13 @@ function addBulkTags(text) {
       bulkTags.push(d);
       added++;
     } else {
-      // Highlight existing tag
+      // Highlight existing tag with pulse
       var el = tagList.children[existing];
       if (el) {
-        el.classList.remove("doi-tag-shake");
-        void el.offsetWidth; // force reflow to restart animation
-        el.classList.add("doi-tag-shake");
+        el.classList.remove("doi-tag-pulse");
+        void el.offsetWidth;
+        el.classList.add("doi-tag-pulse");
+        el.addEventListener("animationend", function () { el.classList.remove("doi-tag-pulse"); }, { once: true });
       }
     }
   });
