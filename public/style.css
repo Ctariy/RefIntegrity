@@ -249,6 +249,23 @@ main {
   line-height: 1;
   padding: 0 0 0 2px;
 }
+.doi-tag-text {
+  cursor: text;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s;
+}
+.doi-tag:hover .doi-tag-text { border-bottom-color: var(--border); }
+.doi-tag-editing { padding-right: 4px; }
+.doi-tag-edit-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text);
+  width: 22ch;
+  padding: 0;
+}
 .doi-tag-remove:hover { color: var(--red); }
 .doi-tag-pulse {
   animation: tag-pulse 0.6s ease;

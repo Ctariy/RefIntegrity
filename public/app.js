@@ -631,10 +631,52 @@ function removeBulkTag(index) {
 
 function renderBulkTags() {
   tagList.innerHTML = bulkTags.map(function (doi, i) {
-    return '<span class="doi-tag">' + escapeHtml(doi) +
+    return '<span class="doi-tag" data-idx="' + i + '">' +
+      '<span class="doi-tag-text">' + escapeHtml(doi) + '</span>' +
       '<button type="button" class="doi-tag-remove" data-idx="' + i + '">&times;</button></span>';
   }).join("");
   syncTagsToTextarea();
+}
+
+function startEditTag(index) {
+  var tag = tagList.querySelector('.doi-tag[data-idx="' + index + '"]');
+  if (!tag || tag.classList.contains("doi-tag-editing")) return;
+  tag.classList.add("doi-tag-editing");
+  var textEl = tag.querySelector(".doi-tag-text");
+  var oldValue = bulkTags[index];
+  var input = document.createElement("input");
+  input.type = "text";
+  input.className = "doi-tag-edit-input";
+  input.value = oldValue;
+  textEl.hidden = true;
+  tag.insertBefore(input, textEl);
+  input.focus();
+  input.select();
+
+  function finishEdit() {
+    var newVal = input.value.trim();
+    if (newVal && newVal !== oldValue) {
+      // Check for duplicate
+      var dup = bulkTags.indexOf(newVal);
+      if (dup !== -1 && dup !== index) {
+        // Duplicate — pulse the existing one, revert this
+        var el = tagList.children[dup];
+        if (el) { el.classList.remove("doi-tag-pulse"); void el.offsetWidth; el.classList.add("doi-tag-pulse"); el.addEventListener("animationend", function () { el.classList.remove("doi-tag-pulse"); }, { once: true }); }
+        newVal = oldValue;
+      }
+      bulkTags[index] = newVal;
+    } else if (!newVal) {
+      // Empty — remove the tag
+      bulkTags.splice(index, 1);
+    }
+    renderBulkTags();
+  }
+
+  input.addEventListener("blur", finishEdit, { once: true });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+    if (e.key === "Escape") { input.value = oldValue; input.blur(); }
+  });
 }
 
 if (bulkTextInput) {
@@ -662,7 +704,12 @@ if (bulkTextInput) {
 if (tagList) {
   tagList.addEventListener("click", function (e) {
     var btn = e.target.closest(".doi-tag-remove");
-    if (btn) removeBulkTag(parseInt(btn.dataset.idx, 10));
+    if (btn) { removeBulkTag(parseInt(btn.dataset.idx, 10)); return; }
+    var textEl = e.target.closest(".doi-tag-text");
+    if (textEl) {
+      var tag = textEl.closest(".doi-tag");
+      if (tag) startEditTag(parseInt(tag.dataset.idx, 10));
+    }
   });
 }
 
