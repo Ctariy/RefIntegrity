@@ -237,46 +237,39 @@ function renderSingleResults(data) {
   // Export
   exportActions.hidden = flagged === 0 && total === 0;
 
-  // Flagged cards — clean, compact
+  // Flagged cards
   if (data.flagged_references && data.flagged_references.length > 0) {
     flaggedList.innerHTML = data.flagged_references.map((ref) => {
       const cfg = getStatusConfig(ref.status);
-      const doiUrl = ref.doi
-        ? ref.doi.startsWith("http") ? ref.doi : `https://doi.org/${ref.doi}`
-        : null;
+      // Clean DOI for display (strip URL prefix)
+      const shortDoi = ref.doi ? ref.doi.replace(/^https?:\/\/doi\.org\//i, "") : null;
+      const doiUrl = shortDoi ? `https://doi.org/${shortDoi}` : null;
 
-      // Strip redundant "RETRACTED: " prefix from title since badge shows status
+      // Strip redundant "RETRACTED: " prefix since badge shows status
       let title = ref.title || i18n.t("results.titleUnavailable");
       title = title.replace(/^(RETRACTED|WITHDRAWN|REMOVED):\s*/i, "");
 
-      // Compact metadata line: year · date · type · notice
+      // Compact meta: DOI · year · notice link
       const metaParts = [];
-      if (ref.publication_year) metaParts.push(ref.publication_year);
-      if (ref.update_date) metaParts.push(escapeHtml(ref.update_date));
-      if (ref.update_label) metaParts.push(escapeHtml(ref.update_label));
-
-      let noticeHtml = "";
+      if (doiUrl) metaParts.push(`<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(shortDoi)}</a>`);
+      if (ref.publication_year) metaParts.push(`<span>${ref.publication_year}</span>`);
       if (ref.notice_doi) {
         const u = `https://doi.org/${escapeHtml(ref.notice_doi)}`;
-        noticeHtml = ` · <a href="${u}" target="_blank" rel="noopener">notice</a>`;
+        metaParts.push(`<a href="${u}" target="_blank" rel="noopener">retraction notice</a>`);
       }
 
+      // Reasons — collapsed by default if more than 2
       let reasonsHtml = "";
       if (ref.reasons && ref.reasons.length > 0) {
-        reasonsHtml = `<div class="ref-reasons">${ref.reasons.map((r) => `<span class="reason-tag">${escapeHtml(r)}</span>`).join("")}</div>`;
+        const tags = ref.reasons.map((r) => `<span class="reason-tag">${escapeHtml(r)}</span>`).join("");
+        reasonsHtml = `<details class="ref-reasons-details"><summary class="ref-reasons-toggle">Reasons (${ref.reasons.length})</summary><div class="ref-reasons">${tags}</div></details>`;
       }
 
       return `
       <div class="ref-card ${cfg.cardClass}">
-        <div class="ref-card-header">
-          <span class="badge ${cfg.cssClass}">${cfg.label}</span>
-          <h3>${escapeHtml(title)}</h3>
-        </div>
-        <div class="ref-meta">
-          ${doiUrl ? `<a href="${escapeHtml(doiUrl)}" target="_blank" rel="noopener">${escapeHtml(ref.doi)}</a>` : ""}
-          ${metaParts.length ? `<span class="meta-sep">${metaParts.join(" · ")}</span>` : ""}
-          ${noticeHtml}
-        </div>
+        <span class="badge ${cfg.cssClass}">${cfg.label}</span>
+        <h3>${escapeHtml(title)}</h3>
+        <div class="ref-meta">${metaParts.join('<span class="meta-dot"> · </span>')}</div>
         ${reasonsHtml}
       </div>`;
     }).join("");
