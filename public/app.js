@@ -606,9 +606,18 @@ function addBulkTags(text) {
   var dois = extractDois(text);
   var added = 0;
   dois.forEach(function (d) {
-    if (bulkTags.indexOf(d) === -1) {
+    var existing = bulkTags.indexOf(d);
+    if (existing === -1) {
       bulkTags.push(d);
       added++;
+    } else {
+      // Highlight existing tag
+      var el = tagList.children[existing];
+      if (el) {
+        el.classList.remove("doi-tag-shake");
+        void el.offsetWidth; // force reflow to restart animation
+        el.classList.add("doi-tag-shake");
+      }
     }
   });
   if (added > 0) renderBulkTags();
